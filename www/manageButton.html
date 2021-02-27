@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- A ENLEVER: juste pour éviter les ereurs de vscode -->
+	<title>Configurer un bouton</title>
+	<link rel="stylesheet" href="assets/css/streamduck.css">
+	<link rel="stylesheet" href="assets/css/manageButton.css">
+</head>
+<body>
+	<div class="loader">
+		<div>
+			<img src="assets/images/logo_monochrome.png">
+			Chargement...
+		</div>
+	</div>
+
+	<label class="form-label">
+		<span>Nom</span>
+		<input type="text" class="form-input" maxlength="25" id="name">
+	</label>
+
+	<label class="form-label">
+		<span>Image</span>
+		<input type="text" class="form-input" placeholder="Cliquez pour sélectionner" id="image" readonly>
+	</label>
+
+	<label class="form-label">
+		<span>Action</span>
+		<select id="action" class="form-input">
+			<option value="keybind">Raccourcis clavier</option>
+			<option value="command">Commande</option>
+			<option value="web">Page Web</option>
+			<option value="soundboardPlay">Soundboard: jouer un son</option>
+			<option value="soundboardStop">Soundboard: arrêter tous les sons</option>
+		</select>
+	</label>
+
+	<div id="actionData"></div>
+
+	<button type="button" class="button" id="submitButton">Valider</button>
+	<button type="button" class="button button-red" id="deleteButton">Supprimer</button>
+</body>
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/manageButton.js"></script>
+<script>if (window.module) module = window.module;</script>
+</html>

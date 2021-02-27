@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval';">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- A ENLEVER POUR LA PROD: juste pour éviter les ereurs de vscode -->
+	<title>StreamDuck</title>
+	<link rel="stylesheet" href="assets/css/streamduck.css">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+	<div class="loader">
+		<div>
+			<img src="assets/images/logo_monochrome.png">
+			Chargement...
+		</div>
+	</div>
+
+	<button id="configButton" class="button" onmouseenter="popover('Bientôt!', this)">
+		<span class="material-icons">settings</span>
+		Configuration
+	</button>
+
+	<button id="soundboardButton" class="button" onmouseenter="popover('Bientôt!', this)">
+		<span class="material-icons">audiotrack</span>
+		Configuration de la soundboard
+	</button>
+
+	<span id="version" onmouseenter="popover(`NodeJS v${process.versions.node}<br>ElectronJS v${process.versions.electron}<br>Chrome ${process.versions.chrome}`, this)">
+		StreamDuck v0.1.1
+	</span>
+
+	<div class="screen row">
+		<!--<button id="previous-screen" class="navigation-button button">
+			<span class="material-icons">keyboard_arrow_left</span>
+		</button>-->
+
+		<div class="buttons">
+			<div class="row">
+				<button data-pos="0" class="screen-button button">+</button>
+				<button data-pos="1" class="screen-button button">+</button>
+				<button data-pos="2" class="screen-button button">+</button>
+				<button data-pos="3" class="screen-button button">+</button>
+			</div>
+	
+			<div class="row">
+				<button data-pos="4" class="screen-button button">+</button>
+				<button data-pos="5" class="screen-button button">+</button>
+				<button data-pos="6" class="screen-button button">+</button>
+				<button data-pos="7" class="screen-button button">+</button>
+			</div>
+		</div>
+
+		<!--<button id="next-screen" class="navigation-button button" onmouseenter="popover('Bientôt!', this, true)">
+			<span class="material-icons">keyboard_arrow_right</span>
+		</button>-->
+	</div>
+</body>
+<script>if (typeof module == 'object') {window.module = module; module = undefined;}</script>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script>if (window.module) module = window.module;</script>
+</html>

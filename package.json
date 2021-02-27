@@ -1,0 +1,26 @@
+{
+	"name": "streamduck",
+	"displayName": "StreamDuck",
+	"version": "0.1.1",
+	"description": "Une alternative open-source au StreamDeck",
+	"main": "index.js",
+	"scripts": {
+		"start": "electron .",
+		"package": "electron-packager . StreamDuck --platform=win32 --out=dist --overwrite --asar=true --icon=icon.ico",
+		"makeInstaller": "node ./scripts/build.js"
+	},
+	"author": "Enzo PB, enzo@zaptoinc.com",
+	"license": "MIT",
+	"devDependencies": {
+		"electron": "^11.2.3",
+		"electron-packager": "^15.2.0",
+		"electron-winstaller": "^4.0.1",
+		"electron-wix-msi": "^3.0.6"
+	},
+	"dependencies": {
+		"express": "^4.17.1",
+		"jimp": "^0.16.1",
+		"nedb": "^1.8.0",
+		"serialport": "^9.0.4"
+	}
+}

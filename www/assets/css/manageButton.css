@@ -1,0 +1,15 @@
+body {
+	padding: 10px;
+}
+
+.form-input, .button {
+	width: 100%
+}
+
+.button:not(:last-child) {
+	margin-bottom: 10px;
+}
+
+#image, #keybind, #sound {
+	cursor: pointer;
+}

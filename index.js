@@ -12,27 +12,26 @@ if (process.argv.includes('debug')) {
 	debug = true;
 }
 
-var db = {
-	buttons: new nedb({ filename: path.join(app.getPath('userData'), 'buttons.db'), autoload: true })
+var db = { // load the databases
+	buttons: new nedb({
+		filename: path.join(app.getPath('userData'), 'buttons.db'),
+		autoload: true
+	})
 };
 
 var mainWindow;
 var soundboardWindow;
 
 const buttonImagesPath = path.join(app.getPath('userData'), 'buttonImages');
-if (!fs.existsSync(buttonImagesPath)) {
-	fs.mkdirSync(buttonImagesPath);
-}
-const soundsPath = path.join(app.getPath('userData'), 'sounds');
-if (!fs.existsSync(soundsPath)) {
-	fs.mkdirSync(soundsPath);
+if (!fs.existsSync(buttonImagesPath)) { // check if the directory used to store buttons images exists
+	fs.mkdirSync(buttonImagesPath); // if not, create it
 }
 
-function createWindow() {
-	mainWindow = new BrowserWindow({
+function createWindows() {
+	mainWindow = new BrowserWindow({ // Create the main window
 		width: 900,
 		height: 600,
-		icon: path.join(__dirname, 'www', 'assets', 'images', 'logo.png'),
+		icon: path.join(__dirname, 'icon.ico'),
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {
@@ -40,50 +39,43 @@ function createWindow() {
 			enableRemoteModule: true
 		}
 	});
-	mainWindow.setMenuBarVisibility(false);
-	mainWindow.loadFile(path.join(__dirname, 'www', 'main.html'));
+	mainWindow.setMenuBarVisibility(false); // hide the menu bar
+	mainWindow.loadFile(path.join(__dirname, 'www', 'main.html')); // load the html document
 
 	
-	soundboardWindow = new BrowserWindow({
+	soundboardWindow = new BrowserWindow({ // Create the soundboard window (not actually a window, more information in www/soundboard.html)
 		width: 0,
 		height: 0,
-		title: 'Soundboard',
+		title: 'Soundboard', // Put a title, sometimes shows in certain OS's multimedia manager
 		transparent: true,
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true
 		}
 	});
-	soundboardWindow.loadFile(path.join(__dirname, 'soundboard.html'));
-	soundboardWindow.hide();
+	soundboardWindow.loadFile(path.join(__dirname, 'soundboard.html')); // load the html documnt
+	soundboardWindow.hide(); // hide the window
 	
 
 	if (debug) {
-		soundboardWindow.toggleDevTools();
+		soundboardWindow.toggleDevTools(); // open the devtool if the debug option is active
 	}
 }
   
-app.whenReady().then(createWindow);
-
-app.on('window-all-closed', () => {
-	if (process.platform != 'darwin') {
-		app.quit();
-	}
-});
+app.whenReady().then(createWindows); // create the main windows
   
 app.on('activate', () => {
 	if (BrowserWindow.getAllWindows().length == 0) {
-		createWindow();
+		createWindows();
 	}
 });
 
-ipcMain.on('openManageButtonDialog', (event, button) => {
-	const manageButtonWindow = new BrowserWindow({
+ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th user clicks on a button (to modify or create one)
+	const manageButtonWindow = new BrowserWindow({ // create the window
 		parent: mainWindow,
 		modal: true,
 		width: 330,
 		height: 450,
-		icon: path.join(__dirname, 'www', 'assets', 'images', 'logo_cropped.png'),
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {
@@ -91,26 +83,26 @@ ipcMain.on('openManageButtonDialog', (event, button) => {
 			enableRemoteModule: true
 		}
 	});
-	manageButtonWindow.setMenuBarVisibility(false);
+	manageButtonWindow.setMenuBarVisibility(false); // hide the menu bar
 
-	manageButtonWindow.loadFile(path.join(__dirname, 'www', 'manageButton.html'));
+	manageButtonWindow.loadFile(path.join(__dirname, 'www', 'manageButton.html')); // load the html document
 
-	ipcMain.once('getButton', event => {
+	ipcMain.once('getButton', event => { // when the manageButton window asks for the button that needs to be modified
 		event.returnValue = button;
 	});
 
-	manageButtonWindow.once('closed', () => {
+	manageButtonWindow.once('closed', () => { // when the manageButton window is closed, tell the mainWindow that the modifications have been submitted, so it updates the button list
 		event.returnValue = true;
 	});
 });
 
 
-function doAction(button) {
-	db.buttons.loadDatabase();
-	db.buttons.findOne({pos: parseInt(button)}, (err, button) => {
+function doAction(button) { // when a button is clicked
+	db.buttons.loadDatabase(); // update the database
+	db.buttons.findOne({pos: parseInt(button)}, (err, button) => { // find the button in the database
 		if (err) throw err;
 
-		switch (button.action) {
+		switch (button.action) { // execute the action
 			case 'keybind':
 				
 				break;
@@ -131,7 +123,7 @@ function doAction(button) {
 }
 
 
-const express = require('express');
+const express = require('express'); // import the module
 const expressApp = express();
 
 expressApp.use('/images', express.static(path.join(app.getPath('userData'), 'buttonImages')));

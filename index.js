@@ -27,7 +27,18 @@ if (!fs.existsSync(buttonImagesPath)) { // check if the directory used to store 
 	fs.mkdirSync(buttonImagesPath); // if not, create it
 }
 
-function createWindows() {
+function createSoundboardWindow() {
+	soundboardWindow = new BrowserWindow({ // Create the soundboard window (not actually a window, more information in www/soundboard.html)
+		webPreferences: {
+			nodeIntegration: true,
+			enableRemoteModule: true
+		}
+	});
+	soundboardWindow.loadFile('soundboard.html'); // load the html documnt
+	soundboardWindow.hide(); // hide the window
+}
+
+function createMainWindow() {
 	mainWindow = new BrowserWindow({ // Create the main window
 		width: 900,
 		height: 600,
@@ -41,33 +52,13 @@ function createWindows() {
 	});
 	mainWindow.setMenuBarVisibility(false); // hide the menu bar
 	mainWindow.loadFile(path.join(__dirname, 'www', 'main.html')); // load the html document
-
-	
-	soundboardWindow = new BrowserWindow({ // Create the soundboard window (not actually a window, more information in www/soundboard.html)
-		width: 0,
-		height: 0,
-		title: 'Soundboard', // Put a title, sometimes shows in certain OS's multimedia manager
-		transparent: true,
-		webPreferences: {
-			nodeIntegration: true,
-			enableRemoteModule: true
-		}
-	});
-	soundboardWindow.loadFile(path.join(__dirname, 'soundboard.html')); // load the html documnt
-	soundboardWindow.hide(); // hide the window
-	
-
-	if (debug) {
-		soundboardWindow.toggleDevTools(); // open the devtool if the debug option is active
-	}
 }
   
-app.whenReady().then(createWindows); // create the main windows
-  
-app.on('activate', () => {
-	if (BrowserWindow.getAllWindows().length == 0) {
-		createWindows();
-	}
+app.whenReady().then(() => {
+	createSoundboardWindow(); // Create the soundboard window
+	setTimeout(() => { // This makes sure that the mainWindow is created after the mainWindow, otherwise it makes a bug where the soundboardWindow is not hidden
+		createMainWindow(); // Create the main window
+	}, 10);
 });
 
 ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th user clicks on a button (to modify or create one)

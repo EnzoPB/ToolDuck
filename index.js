@@ -1,7 +1,9 @@
 const {
 	app,
 	BrowserWindow,
-	ipcMain
+	ipcMain,
+	Tray,
+	Menu
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -21,6 +23,7 @@ var db = { // load the databases
 
 var mainWindow;
 var soundboardWindow;
+var tray;
 
 const buttonImagesPath = path.join(app.getPath('userData'), 'buttonImages');
 if (!fs.existsSync(buttonImagesPath)) { // check if the directory used to store buttons images exists
@@ -42,7 +45,7 @@ function createMainWindow() {
 	mainWindow = new BrowserWindow({ // Create the main window
 		width: 900,
 		height: 600,
-		icon: path.join(__dirname, 'icon.ico'),
+		icon: path.join(__dirname, 'icon.png'),
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {
@@ -52,9 +55,30 @@ function createMainWindow() {
 	});
 	mainWindow.setMenuBarVisibility(false); // hide the menu bar
 	mainWindow.loadFile(path.join(__dirname, 'www', 'main.html')); // load the html document
+
+	tray.setContextMenu(Menu.buildFromTemplate([ // only keep the "quit" button from the tray menu
+		{ label: 'Quitter', role: 'quit' }
+	]));
+
+	mainWindow.once('close', () => {
+		tray.setContextMenu(Menu.buildFromTemplate([
+			{ label: 'Ouvrir la fenêtre', click: () => { // put back the "show window" button in the tray menu, because the window is not visible anymore
+				createMainWindow();
+			} },
+			{ label: 'Quitter', role: 'quit' }
+		]));
+		mainWindow = null;
+	});
+}
+
+function createTrayMenu() {
+	tray = new Tray(path.join(__dirname, 'icon.png')); // create the tray object
+	tray.setToolTip('StreamDuck');
 }
   
 app.whenReady().then(() => {
+	createTrayMenu(); // create the tray menu
+
 	createSoundboardWindow(); // Create the soundboard window
 	setTimeout(() => { // This makes sure that the mainWindow is created after the mainWindow, otherwise it makes a bug where the soundboardWindow is not hidden
 		createMainWindow(); // Create the main window

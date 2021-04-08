@@ -1,28 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>StreamDuck</title>
 	<style>
-		html, body {
+		* {
+			box-sizing: border-box;
+		}
+		
+		html,
+		body {
 			margin: 0;
 			padding: 0;
 		}
+		
 		body {
 			font-family: sans-serif;
 			background-color: #333;
 			display: flex;
 			flex-direction: column;
 		}
+		
 		*::selection {
 			background-color: transparent;
 		}
+		
 		.buttons {
 			display: flex;
 			height: 50vh;
 		}
+		
 		.button {
 			width: 100%;
 			border-radius: 10px;
@@ -30,14 +40,21 @@
 			margin: 10px;
 			padding: 10px;
 		}
+		
 		.button img {
 			width: 100%;
 			height: 100%;
 			display: none;
 			border-radius: 7px;
+			transition: all 0.05s;
+		}
+		
+		.button img:active {
+			transform: scale(1.05)
 		}
 	</style>
 </head>
+
 <body>
 	<div class="buttons">
 		<div class="button" id="button-0" onclick="doAction(0)">
@@ -71,36 +88,37 @@
 </body>
 <script src="assets/js/jquery.min.js"></script>
 <script>
-var buttons = [];
+	var buttons = [];
 
-function updateButtons() {
-	$.get('/getButtons', function(_buttons) {
-		buttons = _buttons;
-		$('.button img').attr('src', '');
-		$('.button img').hide();
-		_buttons.forEach(function(button) {
-			$(`#button-${button.pos} img`).attr('src', `/images/${button.image}`);
-			$(`#button-${button.pos} img`).show();
+	function updateButtons() {
+		$.get('/getButtons', function(_buttons) {
+			buttons = _buttons;
+			$('.button img').attr('src', '');
+			$('.button img').hide();
+			_buttons.forEach(function(button) {
+				$(`#button-${button.pos} img`).attr('src', `/images/${button.image}`);
+				$(`#button-${button.pos} img`).show();
+			});
 		});
+	}
+
+	function doAction(button) {
+		if ($(`#button-${button} img`).attr('src') != '') {
+			$.get(`/doAction/${button}`);
+		}
+	}
+
+	function detectOrientation() {
+		if (window.screen.orientation == 0) {
+			alert('Cette page fonctionne mieux en mode paysage');
+		}
+	}
+
+	$(function() {
+		updateButtons();
+		setInterval(updateButtons, 60000);
+		setInterval(detectOrientation, 5000);
 	});
-}
-
-function doAction(button) {
-	if ($(`#button-${button} img`).attr('src') != '') {
-		$.get(`/doAction/${button}`);
-	}
-}
-
-function detectOrientation() {
-	if (window.screen.orientation == 0) {
-		alert('Cette page fonctionne mieux en mode paysage');
-	}
-}
-
-$(function() {
-	updateButtons();
-	setInterval(updateButtons, 60000);
-	setInterval(detectOrientation, 5000);
-});
 </script>
+
 </html>

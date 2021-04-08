@@ -14,7 +14,7 @@ $(() => {
 
 	setTimeout(() => {
 		$('.loader').hide();
-	}, 300 + Math.random()*300);
+	}, 300 + Math.random() * 300);
 });
 
 $('.screen-button').on('click', event => {
@@ -63,14 +63,12 @@ const popover = (text, element) => {
 
 	var popperInstance = Popper.createPopper(element, tooltip[0], {
 		placement: 'top',
-		modifiers: [
-			{
-				name: 'offset',
-				options: {
-					offset: [0, 5]
-				}
+		modifiers: [{
+			name: 'offset',
+			options: {
+				offset: [0, 5]
 			}
-		]
+		}]
 	});
 
 	$(element).one('mouseleave', event => {

@@ -133,12 +133,12 @@ $(() => {
 
 	$('#deleteButton').on('click', event => {
 		if (dialog.showMessageBoxSync({
-			type: 'question',
-			title: 'Attention',
-			message: `Étes-vous sûr de vouloir supprimer le boutton ${button.name}?`,
-			detail: 'Cette action est irréversible',
-			buttons: ['Non', 'Oui']
-		}) == 1) {
+				type: 'question',
+				title: 'Attention',
+				message: `Étes-vous sûr de vouloir supprimer le boutton ${button.name}?`,
+				detail: 'Cette action est irréversible',
+				buttons: ['Non', 'Oui']
+			}) == 1) {
 			db.buttons.remove({ pos: button.pos }, err => {
 				if (err) throw err;
 				window.close();

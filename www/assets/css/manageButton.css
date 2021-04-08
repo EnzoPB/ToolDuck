@@ -2,7 +2,8 @@ body {
 	padding: 10px;
 }
 
-.form-input, .button {
+.form-input,
+.button {
 	width: 100%
 }
 
@@ -10,6 +11,8 @@ body {
 	margin-bottom: 10px;
 }
 
-#image, #keybind, #sound {
+#image,
+#keybind,
+#sound {
 	cursor: pointer;
 }

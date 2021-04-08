@@ -22,7 +22,7 @@ var db = { // load the databases
 };
 
 var mainWindow;
-var soundboardWindow;
+var audioManagerWindow;
 var tray;
 
 const buttonImagesPath = path.join(app.getPath('userData'), 'buttonImages');
@@ -30,15 +30,19 @@ if (!fs.existsSync(buttonImagesPath)) { // check if the directory used to store 
 	fs.mkdirSync(buttonImagesPath); // if not, create it
 }
 
-function createSoundboardWindow() {
-	soundboardWindow = new BrowserWindow({ // Create the soundboard window (not actually a window, more information in www/soundboard.html)
+function createAudioManagerWindow() {
+	audioManagerWindow = new BrowserWindow({ // Create the audioManager window (not actually a window, more information in audioManager.html)
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true
 		}
 	});
-	soundboardWindow.loadFile('soundboard.html'); // load the html documnt
-	soundboardWindow.hide(); // hide the window
+	audioManagerWindow.loadFile('audioManager.html'); // load the html document
+	audioManagerWindow.hide(); // hide the window
+
+	if (debug) {
+		audioManagerWindow.webContents.openDevTools();
+	}
 }
 
 function createMainWindow() {
@@ -61,10 +65,12 @@ function createMainWindow() {
 	]));
 
 	mainWindow.once('close', () => {
-		tray.setContextMenu(Menu.buildFromTemplate([
-			{ label: 'Ouvrir la fenêtre', click: () => { // put back the "show window" button in the tray menu, because the window is not visible anymore
-				createMainWindow();
-			} },
+		tray.setContextMenu(Menu.buildFromTemplate([{
+				label: 'Ouvrir la fenêtre',
+				click: () => { // put back the "show window" button in the tray menu, because the window is not visible anymore
+					createMainWindow();
+				}
+			},
 			{ label: 'Quitter', role: 'quit' }
 		]));
 		mainWindow = null;
@@ -75,14 +81,14 @@ function createTrayMenu() {
 	tray = new Tray(path.join(__dirname, 'icon.png')); // create the tray object
 	tray.setToolTip('StreamDuck');
 }
-  
+
 app.whenReady().then(() => {
 	createTrayMenu(); // create the tray menu
 
-	createSoundboardWindow(); // Create the soundboard window
-	setTimeout(() => { // This makes sure that the mainWindow is created after the mainWindow, otherwise it makes a bug where the soundboardWindow is not hidden
+	createAudioManagerWindow(); // Create the audioManager window
+	setTimeout(() => { // This makes sure that the mainWindow is created after the mainWindow, otherwise it makes a bug where the audioManager's window is not hidden
 		createMainWindow(); // Create the main window
-	}, 10);
+	}, 100);
 });
 
 ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th user clicks on a button (to modify or create one)
@@ -114,24 +120,24 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th u
 
 function doAction(button) { // when a button is clicked
 	db.buttons.loadDatabase(); // update the database
-	db.buttons.findOne({pos: parseInt(button)}, (err, button) => { // find the button in the database
+	db.buttons.findOne({ pos: parseInt(button) }, (err, button) => { // find the button in the database
 		if (err) throw err;
 
 		switch (button.action) { // execute the action
 			case 'keybind':
-				
+
 				break;
 			case 'command':
-				
+
 				break;
 			case 'web':
-				
+
 				break;
 			case 'soundboardPlay':
-				soundboardWindow.webContents.send('soundboardPlay', button.actionData.sound);
+				audioManagerWindow.webContents.send('soundboardPlay', button.actionData.sound);
 				break;
 			case 'soundboardStop':
-				soundboardWindow.webContents.send('soundboardStop');
+				audioManagerWindow.webContents.send('soundboardStop');
 				break;
 		}
 	});

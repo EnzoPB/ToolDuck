@@ -79,7 +79,7 @@ function createMainWindow() {
 
 function createTrayMenu() {
 	tray = new Tray(path.join(__dirname, 'icon.png')); // create the tray object
-	tray.setToolTip('StreamDuck');
+	tray.setToolTip('ToolDuck');
 }
 
 app.whenReady().then(() => {

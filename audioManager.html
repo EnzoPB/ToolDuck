@@ -36,7 +36,7 @@ This document doesn't have any visual elements. This is why we hide it. It exist
 		for (let i = 0; i !== deviceInfos.length; ++i) {
 			const deviceInfo = deviceInfos[i];
 			if (deviceInfo.kind === 'audiooutput') {
-				if (deviceInfo.label == 'Cable Input (VB-Audio Virtual Cable)' || deviceInfo.label == 'StreamDuckAudioSink') {
+				if (deviceInfo.label == 'Cable Input (VB-Audio Virtual Cable)' || deviceInfo.label == 'ToolDuckAudioSink') {
 					console.log('Detected virtual audio device: ', deviceInfo);
 					virtual = deviceInfo;
 

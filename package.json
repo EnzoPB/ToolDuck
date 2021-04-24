@@ -1,12 +1,12 @@
 {
-	"name": "streamduck",
-	"displayName": "StreamDuck",
+	"name": "toolduck",
+	"displayName": "ToolDuck",
 	"version": "0.1.1",
-	"description": "Une alternative open-source au StreamDeck",
+	"description": "An open-source configurable physical toolbar",
 	"main": "index.js",
 	"scripts": {
 		"start": "electron .",
-		"package": "electron-packager . StreamDuck --platform=win32 --out=dist --overwrite --asar=true --icon=icon.ico",
+		"package": "electron-packager . ToolDuck--out=dist --overwrite --asar=true --icon=icon.ico",
 		"makeInstaller": "node ./scripts/build.js"
 	},
 	"author": "Enzo PB, enzo@zaptoinc.com",

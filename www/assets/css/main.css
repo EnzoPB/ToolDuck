@@ -8,48 +8,18 @@
 	display: flex;
 }
 
-.screen {
-	margin: 0 auto;
+.toolbar {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-}
-
-.screen .navigation-button {
-	height: 40px;
-	width: 40px;
-	text-align: center;
-	background-color: #1C1E2C;
-	color: #9d9fb3;
-	padding: 0;
-	margin: auto;
-	z-index: 1;
-}
-
-.screen .navigation-button .material-icons {
-	font-size: 27px;
-}
-
-.screen .navigation-button:hover {
-	background-color: #3C3E4B;
-}
-
-.screen .navigation-button#previous-screen {
-	margin-right: -21px;
-}
-
-.screen .navigation-button#next-screen {
-	margin-left: -21px;
-}
-
-.screen .buttons {
 	border: 1px solid #3C3E4B;
 	border-radius: 20px;
-	padding: 7.5px;
+	padding: 7px;
 }
 
-.screen .buttons .screen-button {
+.toolbar .buttons .screen-button {
+	flex-shrink: 0;
 	width: 100px;
 	height: 100px;
 	border-radius: 10px;
@@ -58,16 +28,16 @@
 	color: #9d9fb3;
 }
 
-.screen .buttons .screen-button.hasImage {
+.toolbar .buttons .screen-button.hasImage {
 	padding: 5px;
 }
 
-.screen .buttons .screen-button.hasImage img {
+.toolbar .buttons .screen-button.hasImage img {
 	transition: all 0.2s;
 	width: 100%;
 	border-radius: 7px;
 }
 
-.screen .buttons .screen-button.hasImage:hover img {
+.toolbar .buttons .screen-button.hasImage:hover img {
 	transform: scale(1.05);
 }

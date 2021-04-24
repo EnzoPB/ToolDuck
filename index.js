@@ -25,11 +25,6 @@ var mainWindow;
 var audioManagerWindow;
 var tray;
 
-const buttonImagesPath = path.join(app.getPath('userData'), 'buttonImages');
-if (!fs.existsSync(buttonImagesPath)) { // check if the directory used to store buttons images exists
-	fs.mkdirSync(buttonImagesPath); // if not, create it
-}
-
 function createAudioManagerWindow() {
 	audioManagerWindow = new BrowserWindow({ // Create the audioManager window (not actually a window, more information in audioManager.html)
 		webPreferences: {
@@ -48,7 +43,7 @@ function createAudioManagerWindow() {
 function createMainWindow() {
 	mainWindow = new BrowserWindow({ // Create the main window
 		width: 900,
-		height: 600,
+		height: 450,
 		icon: path.join(__dirname, 'icon.png'),
 		backgroundColor: '#1C1E2C',
 		resizable: false,
@@ -96,7 +91,7 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th u
 		parent: mainWindow,
 		modal: true,
 		width: 330,
-		height: 450,
+		height: 400,
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {
@@ -147,7 +142,6 @@ function doAction(button) { // when a button is clicked
 const express = require('express'); // import the module
 const expressApp = express();
 
-expressApp.use('/images', express.static(path.join(app.getPath('userData'), 'buttonImages')));
 expressApp.use('/assets', express.static(path.join(__dirname, 'www', 'assets')));
 
 expressApp.get('/', (req, res) => {

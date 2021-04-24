@@ -15,8 +15,6 @@ var db = {
 var button = {
 	pos: 0,
 	name: '',
-	image: '',
-	imageName: '',
 	action: '',
 	actionData: {}
 };
@@ -42,32 +40,6 @@ $(() => {
 
 	$('#name').on('change', event => {
 		button.name = $(event.currentTarget).val();
-	});
-
-	$('#image').on('click', () => {
-		var image = dialog.showOpenDialogSync({
-			filters: [
-				{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif'] }
-			],
-			properties: ['openFile']
-		})[0];
-
-		button.imageName = image.split('\\')[image.split('\\').length - 1];
-		$('#image').val(button.imageName);
-
-		if (button.image != '') {
-			fs.unlinkSync(path.join(remote.app.getPath('userData'), 'buttonImages', button.image));
-		}
-		var ext = path.extname(button.imageName);
-		var generatedImageName = Math.random().toString(16).substring(2) + ext;
-		button.image = generatedImageName;
-
-		Jimp.read(image, (err, image) => {
-			if (err) throw err;
-			image
-				.resize(200, 200)
-				.write(path.join(remote.app.getPath('userData'), 'buttonImages', generatedImageName));
-		});
 	});
 
 	$('#action').on('change', updateAction);

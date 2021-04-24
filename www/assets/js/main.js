@@ -18,7 +18,7 @@ $(() => {
 });
 
 $('.screen-button').on('click', event => {
-	ipcRenderer.sendSync('openManageButtonDialog', $(event.currentTarget).data('pos'));
+	ipcRenderer.sendSync('openManageButtonDialog', $(event.currentTarget).data('id'));
 	updateButtons();
 });
 
@@ -30,25 +30,21 @@ const updateButtons = () => {
 		$('.screen-button').each(button => {
 			var buttonElement = $($('.screen-button')[button]);
 
-			if (buttonElement.html() != '+') {
-				buttonElement.html('+');
-				buttonElement.removeClass('hasImage');
-				buttonElement.removeAttr('onmouseenter');
+			if (buttonElement.text() != '+') {
+				buttonElement.text('+');
+				buttonElement.removeClass('hasContent');
 			}
 		});
 
 		buttons.forEach(button => {
-			var buttonElement = $(`.screen-button[data-pos=${button.pos}]`);
-			var buttonImage = path.join(remote.app.getPath('userData'), 'buttonImages', button.image);
+			var buttonElement = $(`.screen-button[data-id=${button.id}]`);
 
 			if (button.name != '') {
-				buttonElement.html(`<img src="${buttonImage}" alt="${button.name}">`);
-				buttonElement.addClass('hasImage');
-				buttonElement.attr('onmouseenter', `popover('${button.name}', this)`);
+				buttonElement.text(button.name);
+				buttonElement.addClass('hasContent');
 			} else {
-				buttonElement.html('+');
-				buttonElement.removeClass('hasImage');
-				buttonElement.removeAttr('onmouseenter');
+				//buttonElement.text('+');
+				//buttonElement.removeClass('hasContent');
 			}
 		});
 

@@ -3,9 +3,7 @@ const {
 	remote
 } = require('electron');
 const { dialog } = remote;
-const fs = require('fs');
 const path = require('path');
-const Jimp = require('jimp');
 const nedb = require('nedb');
 
 var db = {
@@ -13,15 +11,15 @@ var db = {
 };
 
 var button = {
-	pos: 0,
+	id: 0,
 	name: '',
 	action: '',
 	actionData: {}
 };
 
 $(() => {
-	button.pos = ipcRenderer.sendSync('getButton');
-	db.buttons.find({ pos: button.pos }, (err, _button) => {
+	button.id = ipcRenderer.sendSync('getButton');
+	db.buttons.find({ id: button.id }, (err, _button) => {
 		if (err) throw err;
 
 		if (_button.length == 1) {
@@ -77,14 +75,14 @@ $(() => {
 				message: `You must fill the following fields: ${emptyInput.join(', ')}`
 			});
 		} else {
-			db.buttons.find({ pos: button.pos }, (err, count) => {
+			db.buttons.find({ id: button.id }, (err, count) => {
 				if (count == 0) {
 					db.buttons.insert(button, (err, a) => {
 						if (err) throw err;
 						window.close();
 					});
 				} else {
-					db.buttons.update({ pos: button.pos }, button, (err, a) => {
+					db.buttons.update({ id: button.id }, button, (err, a) => {
 						if (err) throw err;
 						window.close();
 					})
@@ -101,7 +99,7 @@ $(() => {
 				detail: 'This action is irreversible',
 				buttons: ['No', 'Yes']
 			}) == 1) {
-			db.buttons.remove({ pos: button.pos }, err => {
+			db.buttons.remove({ id: button.id }, err => {
 				if (err) throw err;
 				window.close();
 			});

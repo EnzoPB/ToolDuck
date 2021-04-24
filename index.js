@@ -6,7 +6,6 @@ const {
 	Menu
 } = require('electron');
 const path = require('path');
-const fs = require('fs');
 const nedb = require('nedb');
 
 var debug = false;

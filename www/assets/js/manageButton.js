@@ -27,7 +27,6 @@ $(() => {
 		if (_button.length == 1) {
 			button = _button[0];
 			$('#name').val(button.name);
-			$('#image').val(button.imageName);
 			$('#action').val(button.action);
 		} else {
 			$('#deleteButton').hide();
@@ -48,33 +47,24 @@ $(() => {
 
 		var emptyInput = [];
 		if ($('#name').val() == '') {
-			emptyInput.push('nom');
-		}
-		if ($('#image').val() == '') {
-			emptyInput.push('image');
+			emptyInput.push('name');
 		}
 		if ($('#action').val() == null) {
 			emptyInput.push('action');
 		}
 		if ($('#action').val() == 'keybind' && $('#keybind').val() == '') {
-			emptyInput.push('touche de raccourcis');
-		}
-		if ($('#action').val() == 'web' && $('#webadress').val() == '') {
-			emptyInput.push('adresse web');
+			emptyInput.push('keyboard shortcut');
 		}
 		if ($('#action').val() == 'soundboardPlay' && $('#sound').val() == '') {
-			emptyInput.push('fichier son');
+			emptyInput.push('sound file');
 		}
 		if ($('#action').val() == 'command' && $('#command').val() == '') {
-			emptyInput.push('commande');
+			emptyInput.push('command');
 		}
 
 		switch ($('#action').val()) {
 			case 'keybind':
 				button.actionData.keybind = $('#keybind').val();
-				break;
-			case 'web':
-				button.actionData.webadress = $('#webadress').val();
 				break;
 			case 'command':
 				button.actionData.command = $('#command').val();
@@ -84,7 +74,7 @@ $(() => {
 		if (emptyInput.length != 0) {
 			dialog.showMessageBox({
 				type: 'warning',
-				message: `Vous devez completer les champ(s) suivant: ${emptyInput.join(', ')}`
+				message: `You must fill the following fields: ${emptyInput.join(', ')}`
 			});
 		} else {
 			db.buttons.find({ pos: button.pos }, (err, count) => {
@@ -106,10 +96,10 @@ $(() => {
 	$('#deleteButton').on('click', event => {
 		if (dialog.showMessageBoxSync({
 				type: 'question',
-				title: 'Attention',
-				message: `Étes-vous sûr de vouloir supprimer le boutton ${button.name}?`,
-				detail: 'Cette action est irréversible',
-				buttons: ['Non', 'Oui']
+				title: 'Warning',
+				message: `Are you sure you want to delete "${button.name}"?`,
+				detail: 'This action is irreversible',
+				buttons: ['No', 'Yes']
 			}) == 1) {
 			db.buttons.remove({ pos: button.pos }, err => {
 				if (err) throw err;
@@ -133,8 +123,8 @@ const updateAction = () => {
 		case 'keybind':
 			actionData.append(`
 			<label class="form-label">
-				<span>Touche</span>
-				<input id="keybind" class="form-input" type="text" placeholder="Cliquez pour choisir une touche" readonly>
+				<span>Key</span>
+				<input id="keybind" class="form-input" type="text" placeholder="Click to select a keyboard shortcut" readonly>
 			</label>`);
 
 			actionDataListeners.push({
@@ -147,13 +137,13 @@ const updateAction = () => {
 				var input = $('#keybind');
 
 				if (keybindFocused) {
-					input.attr('placeholder', 'Cliquez pour terminer la sélection');
+					input.attr('placeholder', 'Click to end input');
 					input.focus();
 					input.on('keyup', event => {
 						console.log(event);
 					});
 				} else {
-					input.attr('placeholder', 'Cliquez pour choisir une touche');
+					input.attr('placeholder', 'Click to select a keyboard shortcut');
 					input.blur();
 					input.off('keyup');
 				}
@@ -163,24 +153,16 @@ const updateAction = () => {
 		case 'command':
 			actionData.append(`
 			<label class="form-label">
-				<span>Commande</span>
+				<span>Command</span>
 				<input id="command" class="form-input" type="text">
-			</label>`);
-			break;
-
-		case 'web':
-			actionData.append(`
-			<label class="form-label">
-				<span>Adresse web</span>
-				<input id="webadress" class="form-input" type="text">
 			</label>`);
 			break;
 
 		case 'soundboardPlay':
 			actionData.append(`
 			<label class="form-label">
-				<span>Fichier son</span>
-				<input type="text" class="form-input" placeholder="Cliquez pour sélectionner" id="sound" value="" readonly>
+				<span>Sound file</span>
+				<input type="text" class="form-input" placeholder="Click to select" id="sound" value="" readonly>
 				</select>
 			</label>`);
 
@@ -192,7 +174,7 @@ const updateAction = () => {
 			$('#sound').on('click', () => {
 				var sound = dialog.showOpenDialogSync({
 					filters: [
-						{ name: 'Fichiers son', extensions: ['mp3', 'ogg', 'wav'] }
+						{ name: 'Sound file', extensions: ['mp3', 'ogg', 'wav'] }
 					],
 					properties: ['openFile']
 				})[0];

@@ -14,7 +14,7 @@ $(() => {
 
 	setTimeout(() => {
 		$('.loader').hide();
-	}, 300 + Math.random() * 300);
+	}, 300 + Math.random() * 300); // lol the loader is a scam
 });
 
 $('.screen-button').on('click', event => {

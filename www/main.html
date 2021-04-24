@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval';">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- TO REMOVE FOR PROD: only to avoid vscode warnings -->
 	<title>ToolDuck</title>
 	<link rel="stylesheet" href="assets/css/toolduck.css">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -10,19 +12,18 @@
 <body>
 	<div class="loader">
 		<div>
-			<img src="assets/images/logo_monochrome.png">
-			Chargement...
+			<img src="assets/images/logo_monochrome.png"> Chargement...
 		</div>
 	</div>
 
-	<button id="configButton" class="button" onmouseenter="popover('Bientôt!', this)">
+	<button id="configButton" class="button" onmouseenter="popover('soon&trade;', this)">
 		<span class="material-icons">settings</span>
-		Configuration
+		Settings
 	</button>
 
-	<button id="soundboardButton" class="button" onmouseenter="popover('Bientôt!', this)">
+	<button id="soundboardButton" class="button" onmouseenter="popover('soon&trade;', this)">
 		<span class="material-icons">audiotrack</span>
-		Configuration de la soundboard
+		Audio configuration
 	</button>
 
 	<span id="version" onmouseenter="popover(`NodeJS v${process.versions.node}<br>ElectronJS v${process.versions.electron}<br>Chrome ${process.versions.chrome}`, this)">

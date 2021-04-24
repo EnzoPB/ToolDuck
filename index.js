@@ -124,9 +124,6 @@ function doAction(button) { // when a button is clicked
 			case 'command':
 
 				break;
-			case 'web':
-
-				break;
 			case 'soundboardPlay':
 				audioManagerWindow.webContents.send('soundboardPlay', button.actionData.sound);
 				break;

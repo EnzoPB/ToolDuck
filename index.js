@@ -83,7 +83,7 @@ app.whenReady().then(() => {
 	createAudioManagerWindow(); // Create the audioManager window
 	setTimeout(() => { // This makes sure that the mainWindow is created after the mainWindow, otherwise it makes a bug where the audioManager's window is not hidden
 		createMainWindow(); // Create the main window
-	}, 100);
+	}, 500);
 });
 
 ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th user clicks on a button (to modify or create one)

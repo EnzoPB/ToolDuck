@@ -55,17 +55,17 @@ function createMainWindow() {
 	mainWindow.loadFile(path.join(__dirname, 'www', 'main.html')); // load the html document
 
 	tray.setContextMenu(Menu.buildFromTemplate([ // only keep the "quit" button from the tray menu
-		{ label: 'Quitter', role: 'quit' }
+		{ label: 'Quit', role: 'quit' }
 	]));
 
 	mainWindow.once('close', () => {
 		tray.setContextMenu(Menu.buildFromTemplate([{
-				label: 'Ouvrir la fenêtre',
+				label: 'Show',
 				click: () => { // put back the "show window" button in the tray menu, because the window is not visible anymore
 					createMainWindow();
 				}
 			},
-			{ label: 'Quitter', role: 'quit' }
+			{ label: 'Quit', role: 'quit' }
 		]));
 		mainWindow = null;
 	});

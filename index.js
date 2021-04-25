@@ -48,8 +48,8 @@ function createAudioManagerWindow() {
 
 function createMainWindow() {
 	mainWindow = new BrowserWindow({ // Create the main window
-		width: 900,
-		height: 450,
+		width: 1000,
+		height: 400,
 		icon: path.join(__dirname, 'icon.png'),
 		backgroundColor: '#1C1E2C',
 		resizable: false,

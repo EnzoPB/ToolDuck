@@ -35,3 +35,7 @@
 	line-break: anywhere;
 	color: #e5e6f0;
 }
+
+.toolbar .buttons .toolbar-button.potentiometer {
+	border-radius: 50%;
+}

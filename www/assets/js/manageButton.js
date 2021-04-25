@@ -85,6 +85,7 @@ $(() => {
 			});
 		} else {
 			db.buttons.find({ id: button.id }, (err, count) => {
+				if (err) throw err;
 				if (count == 0) {
 					db.buttons.insert(button, (err, a) => {
 						if (err) throw err;

@@ -28,6 +28,7 @@ function createAudioManagerWindow() {
 	audioManagerWindow = new BrowserWindow({ // Create the audioManager window (not actually a window, more information in audioManager.html)
 		webPreferences: {
 			nodeIntegration: true,
+			contextIsolation: false,
 			enableRemoteModule: true
 		}
 	});
@@ -48,6 +49,7 @@ function createMainWindow() {
 		resizable: false,
 		webPreferences: {
 			nodeIntegration: true,
+			contextIsolation: false,
 			enableRemoteModule: true
 		}
 	});
@@ -95,6 +97,7 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th u
 		resizable: false,
 		webPreferences: {
 			nodeIntegration: true,
+			contextIsolation: false,
 			enableRemoteModule: true
 		}
 	});

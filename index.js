@@ -140,29 +140,3 @@ function doAction(button) { // when a button is clicked
 		}
 	});
 }
-
-
-const express = require('express'); // import the module
-const expressApp = express();
-
-expressApp.use('/assets', express.static(path.join(__dirname, 'www', 'assets')));
-
-expressApp.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, 'webApp.html'));
-});
-
-expressApp.get('/doAction/:button', (req, res) => {
-	doAction(req.params.button);
-	res.end();
-});
-
-expressApp.get('/getButtons', (req, res) => {
-	res.setHeader('content-type', 'application/json');
-	db.buttons.loadDatabase();
-	db.buttons.find({}, (err, buttons) => {
-		if (err) throw err;
-		res.end(JSON.stringify(buttons));
-	});
-});
-
-expressApp.listen(4242);

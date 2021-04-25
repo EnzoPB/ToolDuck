@@ -32,6 +32,7 @@ const updateButtons = () => {
 
 			if (buttonElement.text() != '+') {
 				buttonElement.text('+');
+				buttonElement.css('box-shadow', 'none');
 				buttonElement.removeClass('hasContent');
 			}
 		});
@@ -41,6 +42,12 @@ const updateButtons = () => {
 
 			if (button.name != '') {
 				buttonElement.text(button.name);
+				if (button.color == '#000000') {
+					buttonElement.css('box-shadow', 'none');
+				} else {
+					buttonElement.css('box-shadow', `0 0 7px 0 ${button.color}`);
+				}
+
 				buttonElement.addClass('hasContent');
 			}
 		});

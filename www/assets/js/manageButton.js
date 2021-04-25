@@ -13,6 +13,7 @@ var db = {
 var button = {
 	id: 0,
 	name: '',
+	color: '#000000',
 	action: '',
 	actionData: {}
 };
@@ -25,6 +26,7 @@ $(() => {
 		if (_button.length == 1) {
 			button = _button[0];
 			$('#name').val(button.name);
+			$('#color').val(button.color);
 			$('#action').val(button.action);
 		} else {
 			$('#deleteButton').hide();
@@ -36,7 +38,14 @@ $(() => {
 	});
 
 	$('#name').on('change', event => {
-		button.name = $(event.currentTarget).val();
+		button.name = $('#name').val();
+	});
+
+	$('#color').on('input', event => {
+		ipcRenderer.send('changeBtnColor', $('#color').val());
+	});
+	$('#color').on('change', event => {
+		button.color = $('#color').val();
 	});
 
 	$('#action').on('change', updateAction);

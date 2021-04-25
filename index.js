@@ -26,14 +26,20 @@ var tray;
 
 function createAudioManagerWindow() {
 	audioManagerWindow = new BrowserWindow({ // Create the audioManager window (not actually a window, more information in audioManager.html)
+		width: 0,
+		height: 0,
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,
 			enableRemoteModule: true
 		}
 	});
+
+	audioManagerWindow.once('ready-to-show', function() { // we make this because sometimes this window doesn't hide properly, we make this so it show for a very short time (the size is 0x0 so it is almost invisible)
+		audioManagerWindow.hide(); // and then we hide it
+	});
+
 	audioManagerWindow.loadFile('audioManager.html'); // load the html document
-	audioManagerWindow.hide(); // hide the window
 
 	if (debug) {
 		audioManagerWindow.webContents.openDevTools();
@@ -82,9 +88,7 @@ app.whenReady().then(() => {
 	createTrayMenu(); // create the tray menu
 
 	createAudioManagerWindow(); // Create the audioManager window
-	setTimeout(() => { // This makes sure that the mainWindow is created after the mainWindow, otherwise it makes a bug where the audioManager's window is not hidden
-		createMainWindow(); // Create the main window
-	}, 500);
+	createMainWindow() // Create the main window
 });
 
 ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th user clicks on a button (to modify or create one)

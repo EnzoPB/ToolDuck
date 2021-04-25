@@ -18,7 +18,7 @@
 	padding: 7px;
 }
 
-.toolbar .buttons .screen-button {
+.toolbar .buttons .toolbar-button {
 	flex-shrink: 0;
 	width: 100px;
 	height: 100px;
@@ -29,7 +29,7 @@
 	color: #9d9fb3;
 }
 
-.toolbar .buttons .screen-button.hasContent {
+.toolbar .buttons .toolbar-button.hasContent {
 	font-size: 20px;
 	text-align: center;
 	line-break: anywhere;

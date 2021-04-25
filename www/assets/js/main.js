@@ -17,7 +17,7 @@ $(() => {
 	}, 300 + Math.random() * 300); // lol the loader is a scam
 });
 
-$('.screen-button').on('click', event => {
+$('.toolbar-button').on('click', event => {
 	ipcRenderer.sendSync('openManageButtonDialog', $(event.currentTarget).data('id'));
 	updateButtons();
 });
@@ -27,8 +27,8 @@ const updateButtons = () => {
 	db.buttons.find({}, (err, buttons) => {
 		if (err) throw err;
 
-		$('.screen-button').each(button => {
-			var buttonElement = $($('.screen-button')[button]);
+		$('.toolbar-button').each(button => {
+			var buttonElement = $($('.toolbar-button')[button]);
 
 			if (buttonElement.text() != '+') {
 				buttonElement.text('+');
@@ -37,14 +37,11 @@ const updateButtons = () => {
 		});
 
 		buttons.forEach(button => {
-			var buttonElement = $(`.screen-button[data-id=${button.id}]`);
+			var buttonElement = $(`.toolbar-button[data-id=${button.id}]`);
 
 			if (button.name != '') {
 				buttonElement.text(button.name);
 				buttonElement.addClass('hasContent');
-			} else {
-				//buttonElement.text('+');
-				//buttonElement.removeClass('hasContent');
 			}
 		});
 

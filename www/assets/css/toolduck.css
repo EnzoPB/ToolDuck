@@ -119,9 +119,45 @@ body {
 	cursor: text;
 }
 
+.range-wrapper {
+	display: flex;
+	margin-bottom: 15px;
+}
+
+.range-wrapper .value {
+	line-height: 30px;
+	text-align: right;
+	width: 50px;
+}
+
+.form-input[type="range"] {
+	appearance: none;
+	outline: none;
+	background-color: #1C1E2C;
+	border: 2px solid #3C3E4B;
+	height: 30px;
+	padding: 0 3px;
+	margin: 0;
+	border-radius: 15px;
+	width: 100%;
+}
+
+.form-input[type="range"]::-webkit-slider-thumb {
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: #9d9fb3;
+	cursor: pointer;
+}
+
 .form-label {
 	position: relative;
 	top: -10px;
+}
+
+.range-label {
+	top: 0;
 }
 
 .form-label>span {
@@ -133,6 +169,11 @@ body {
 	font-size: 14px;
 	padding: 0 4px;
 	z-index: 1;
+}
+
+.range-label>span {
+	top: 0;
+	left: 0;
 }
 
 

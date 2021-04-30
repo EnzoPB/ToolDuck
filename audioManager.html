@@ -85,8 +85,8 @@ This document doesn't have any visual elements. This is why we hide it. It exist
 		console.error(e)
 	});
 
-	ipcRenderer.on('soundboardPlay', (event, fileName) => {
-		console.log('Playing ', fileName);
+	ipcRenderer.on('soundboardPlay', (event, data) => {
+		console.log('Playing ', data.fileName);
 		if (typeof virtual == 'undefined') {
 			dialog.showMessageBox({
 				type: 'error',
@@ -103,8 +103,11 @@ This document doesn't have any visual elements. This is why we hide it. It exist
 		runningSounds.push(speakerAudioElement);
 		runningSounds.push(virtualAudioElement);
 
-		speakerAudioElement.src = fileName;
-		virtualAudioElement.src = fileName;
+		speakerAudioElement.src = data.fileName;
+		virtualAudioElement.src = data.fileName;
+
+		speakerAudioElement.volume = data.volume / 100;
+		virtualAudioElement.volume = data.volume / 100;
 
 		speakerAudioElement.addEventListener('ended', () => {
 			runningSounds.splice(runningSounds.indexOf(speakerAudioElement), 1);

@@ -74,7 +74,7 @@ $(() => {
 			if ($('#action-potentiometer').val() == 'keybind' && $('#keybind').val() == '') {
 				emptyInput.push('keyboard shortcut');
 			}
-			if ($('#action-potentiometer').val() == 'soundboardPlay' && $('#sound').val() == '') {
+			if ($('#action-potentiometer').val() == 'soundboardPlay' && $('#fileName').val() == '') {
 				emptyInput.push('sound file');
 			}
 			if ($('#action-potentiometer').val() == 'command' && $('#command').val() == '') {
@@ -94,7 +94,7 @@ $(() => {
 			if ($('#action-button').val() == 'keybind' && $('#keybind').val() == '') {
 				emptyInput.push('keyboard shortcut');
 			}
-			if ($('#action-button').val() == 'soundboardPlay' && $('#sound').val() == '') {
+			if ($('#action-button').val() == 'soundboardPlay' && $('#fileName').val() == '') {
 				emptyInput.push('sound file');
 			}
 			if ($('#action-button').val() == 'command' && $('#command').val() == '') {
@@ -107,6 +107,10 @@ $(() => {
 					break;
 				case 'command':
 					button.actionData.command = $('#command').val();
+					break;
+				case 'soundboardPlay':
+					button.actionData.fileName = $('#fileName').val();
+					button.actionData.volume = $('#volume').val();
 					break;
 			}
 		}
@@ -218,25 +222,44 @@ const updateAction = () => {
 				actionData.append(`
 				<label class="form-label">
 					<span>Sound file</span>
-					<input type="text" class="form-input" placeholder="Click to select" id="sound" value="" readonly>
+					<input type="text" class="form-input" placeholder="Click to select" id="fileName" value="" readonly>
 					</select>
-				</label>`); // we add a "sound" field
+				</label>`); // we add a "fileName" field
+
+				actionData.append(`
+				<label class="form-label range-label">
+					<span>Volume</span>
+					<span class="range-wrapper">
+						<input type="range" class="form-input" min="0" max="100" value="0" id="volume">
+						<span class="value">0%</span>
+					</span>
+				</label>`); // we add the volume slider
 
 				actionDataListeners.push({ // we add the click input event listener 
-					element: $('#sound'),
+					element: $('#fileName'),
 					event: 'click'
 				});
+				actionDataListeners.push({
+					element: $('#volume'),
+					event: 'input'
+				});
 
-				$('#sound').on('click', () => { // if the input is clicked
-					var sound = dialog.showOpenDialogSync({ // we open a file dialog
+				$('#fileName').on('click', () => { // if the input is clicked
+					var fileName = dialog.showOpenDialogSync({ // we open a file dialog
 						filters: [
 							{ name: 'Sound file', extensions: ['mp3', 'ogg', 'wav'] } // only accept audio files
 						],
 						properties: ['openFile']
 					})[0];
-					$('#sound').val(sound);
+					$('#fileName').val(fileName);
+				});
 
-					button.actionData.sound = sound;
+				$('.form-input[type="range"]').on('input', () => {
+					var slider = $('#volume');
+					var unit = slider.data('unit');
+					var label = slider.siblings('.value');
+
+					label.text(slider.val() + '%');
 				});
 				break;
 		}

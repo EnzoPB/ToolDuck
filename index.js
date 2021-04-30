@@ -96,7 +96,7 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th u
 		parent: mainWindow,
 		modal: true,
 		width: 330,
-		height: 400,
+		height: 450,
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {
@@ -133,7 +133,10 @@ function doAction(button) { // when a button is clicked
 
 					break;
 				case 'soundboardPlay':
-					audioManagerWindow.webContents.send('soundboardPlay', button.actionData.sound);
+					audioManagerWindow.webContents.send('soundboardPlay', {
+						fileName: button.actionData.fileName,
+						volume: button.actionData.volume
+					});
 					break;
 				case 'soundboardStop':
 					audioManagerWindow.webContents.send('soundboardStop');

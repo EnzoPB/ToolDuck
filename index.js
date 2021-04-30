@@ -88,7 +88,7 @@ app.whenReady().then(() => {
 	createTrayMenu(); // create the tray menu
 
 	createAudioManagerWindow(); // Create the audioManager window
-	createMainWindow() // Create the main window
+	createMainWindow(); // Create the main window
 });
 
 ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th user clicks on a button (to modify or create one)

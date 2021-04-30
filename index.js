@@ -7,10 +7,30 @@ const {
 } = require('electron');
 const path = require('path');
 const nedb = require('nedb');
+const SerialPort = require('serialport');
+const { StringStream } = require('scramjet');
 
-var debug = false;
+var debug = true;
 if (process.argv.includes('debug')) {
 	debug = true;
+}
+
+function connectSerial(port) {
+	var serialport = new SerialPort(port, { // initialize the serial port connection
+		baudRate: 9600,
+		parser: new SerialPort.parsers.Readline('\r\n')
+	});
+
+	serialport.on('open', () => { // when the serial port is opened
+		serialport.pipe(new StringStream)
+			.lines('\r\n') // read data until a new line
+			.each(data => { // process the data
+				data = data.split('/'); // data format: dataType/data
+				if (data[0] == 'buttonPress') { // if the dataType is a button press
+					doAction(data[1]); // execute the action corresponding to the button
+				}
+			});
+	});
 }
 
 var db = { // load the databases
@@ -86,6 +106,8 @@ function createTrayMenu() {
 
 app.whenReady().then(() => {
 	createTrayMenu(); // create the tray menu
+
+	connectSerial('/dev/ttyACM0'); // Connect the device's serial port and start the listener
 
 	createAudioManagerWindow(); // Create the audioManager window
 	createMainWindow(); // Create the main window

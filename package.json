@@ -14,11 +14,13 @@
 	"devDependencies": {
 		"electron": "^11.2.3",
 		"electron-packager": "^15.2.0",
+		"electron-rebuild": "^2.3.5",
 		"electron-winstaller": "^4.0.1",
 		"electron-wix-msi": "^3.0.6"
 	},
 	"dependencies": {
 		"nedb": "^1.8.0",
+		"scramjet": "^4.35.16",
 		"serialport": "^9.0.4"
 	}
 }

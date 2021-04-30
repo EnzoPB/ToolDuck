@@ -121,7 +121,7 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th u
 
 function doAction(button) { // when a button is clicked
 	db.buttons.loadDatabase(); // update the database
-	db.buttons.findOne({ pos: parseInt(button) }, (err, button) => { // find the button in the database
+	db.buttons.findOne({ id: parseInt(button) }, (err, button) => { // find the button in the database
 		if (err) throw err;
 
 		switch (button.action) { // execute the action

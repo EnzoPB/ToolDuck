@@ -124,19 +124,21 @@ function doAction(button) { // when a button is clicked
 	db.buttons.findOne({ id: parseInt(button) }, (err, button) => { // find the button in the database
 		if (err) throw err;
 
-		switch (button.action) { // execute the action
-			case 'keybind':
+		if (button != null) {
+			switch (button.action) { // execute the action
+				case 'keybind':
 
-				break;
-			case 'command':
+					break;
+				case 'command':
 
-				break;
-			case 'soundboardPlay':
-				audioManagerWindow.webContents.send('soundboardPlay', button.actionData.sound);
-				break;
-			case 'soundboardStop':
-				audioManagerWindow.webContents.send('soundboardStop');
-				break;
+					break;
+				case 'soundboardPlay':
+					audioManagerWindow.webContents.send('soundboardPlay', button.actionData.sound);
+					break;
+				case 'soundboardStop':
+					audioManagerWindow.webContents.send('soundboardStop');
+					break;
+			}
 		}
 	});
 }

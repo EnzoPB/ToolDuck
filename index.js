@@ -113,7 +113,7 @@ app.whenReady().then(() => {
 	createMainWindow(); // Create the main window
 });
 
-ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when th user clicks on a button (to modify or create one)
+ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when the user clicks on a button (to modify or create one)
 	const manageButtonWindow = new BrowserWindow({ // create the window
 		parent: mainWindow,
 		modal: true,

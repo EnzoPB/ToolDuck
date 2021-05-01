@@ -133,8 +133,6 @@ body {
 .form-input[type="range"] {
 	appearance: none;
 	outline: none;
-	background-color: #1C1E2C;
-	border: 2px solid #3C3E4B;
 	height: 30px;
 	padding: 0 3px;
 	margin: 0;

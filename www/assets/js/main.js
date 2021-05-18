@@ -22,6 +22,10 @@ $('.toolbar-button').on('click', event => {
 	updateButtons();
 });
 
+$('#settingsDialogButton').on('click', () => {
+	ipcRenderer.sendSync('openSettingsDialog');
+});
+
 const updateButtons = () => {
 	db.buttons.loadDatabase();
 	db.buttons.find({}, (err, buttons) => {

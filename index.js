@@ -140,6 +140,29 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when the 
 	});
 });
 
+ipcMain.on('openSettingsDialog', event => {
+	const settingsDialog = new BrowserWindow({ // create the window
+		parent: mainWindow,
+		modal: true,
+		width: 500,
+		height: 400,
+		backgroundColor: '#1C1E2C',
+		resizable: false,
+		webPreferences: {
+			nodeIntegration: true,
+			contextIsolation: false,
+			enableRemoteModule: true
+		}
+	});
+	settingsDialog.setMenuBarVisibility(false); // hide the menu bar
+
+	settingsDialog.loadFile(path.join(__dirname, 'www', 'settings.html')); // load the html document
+
+	settingsDialog.once('closed', () => { // when the window is closed, tell the mainWindow that the modifications have been submitted
+		event.returnValue = true;
+	});
+});
+
 
 function doAction(button) { // when a button is clicked
 	db.buttons.loadDatabase(); // update the database

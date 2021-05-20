@@ -1,0 +1,26 @@
+<!--
+
+This document doesn't have any visual elements. This is why we hide it. It exists because we use the HTML Audio API (with WebRTC) so we can use the microphone and the output device we want
+
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>ToolDuck</title>
+</head>
+<script>
+	if (typeof module == 'object') {
+		window.module = module;
+		module = undefined;
+	}
+</script>
+<script src="../www/assets/js/jquery.min.js"></script>
+<script src="audioManager.js"></script>
+<script>
+	if (window.module) module = window.module;
+</script>
+
+</html>

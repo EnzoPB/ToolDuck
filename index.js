@@ -163,6 +163,9 @@ ipcMain.on('openSettingsDialog', event => {
 	});
 });
 
+ipcMain.on('reloadAudioManager', event => {
+	audioManagerWindow.reload();
+});
 
 function doAction(button) { // when a button is clicked
 	db.buttons.loadDatabase(); // update the database

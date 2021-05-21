@@ -3,74 +3,118 @@ const {
 	remote
 } = require('electron');
 const { dialog } = remote;
+const path = require('path');
+const nedb = require('nedb');
 
-var speaker;
-var virtual;
+var db = {
+	settings: new nedb({ filename: path.join(remote.app.getPath('userData'), 'settings.db'), autoload: true })
+};
 
-var runningSounds = [];
+var speakerDeviceId;
+var virtualDeviceId;
+var microphoneDeviceId;
 
-navigator.mediaDevices.enumerateDevices().then(deviceInfos => {
-	console.log('mediaDevices: ', deviceInfos);
-	for (let i = 0; i !== deviceInfos.length; ++i) {
-		const deviceInfo = deviceInfos[i];
-		if (deviceInfo.kind === 'audiooutput') {
-			if (deviceInfo.label == 'Cable Input (VB-Audio Virtual Cable)' || deviceInfo.label == 'ToolDuckAudioSink') {
-				console.log('Detected virtual audio device: ', deviceInfo);
-				virtual = deviceInfo;
+var speakerDevice;
+var virtualDevice;
+var microphoneDevice;
 
-				console.log('Creating microphone stream and redirecting it to the virtual audio device');
-				if (window.stream) {
-					window.stream.getTracks().forEach(track => {
-						track.stop();
+db.settings.findOne({ setting: 'audioOutput' }, (err, setting) => {
+	if (err) throw err;
+	speakerDeviceId = setting.value;
+	console.log('speakerDeviceId:', speakerDeviceId);
+
+	db.settings.findOne({ setting: 'audioCable' }, (err, setting) => {
+		if (err) throw err;
+		virtualDeviceId = setting.value;
+		console.log('virtualDeviceId:', virtualDeviceId);
+
+		db.settings.findOne({ setting: 'audioInput' }, (err, setting) => {
+			if (err) throw err;
+			microphoneDeviceId = setting.value;
+			console.log('microphoneDeviceId:', microphoneDeviceId);
+
+			init();
+		});
+	});
+});
+
+function init() {
+	navigator.mediaDevices.enumerateDevices().then(devices => {
+		console.log('mediaDevices: ', devices);
+		devices.forEach((device, index, array) => {
+			if (speakerDeviceId == device.deviceId) {
+				console.log('Detected speaker audio device: ', device);
+				speakerDevice = device;
+			}
+
+			if (virtualDeviceId == device.deviceId) {
+				console.log('Detected virtual audio device: ', device);
+				virtualDevice = device;
+			}
+
+			if (microphoneDeviceId == device.deviceId) {
+				console.log('Detected microphone: ', device);
+				microphoneDevice = device
+			}
+
+
+			if (index == array.length - 1) {
+				if (typeof speakerDevice == 'undefined') {
+					dialog.showMessageBox({
+						type: 'error',
+						title: 'ToolDuck AudioManager',
+						message: 'The output device (speakers) is not properly configured, or is not detected. You can fix that in the settings'
 					});
 				}
 
+				if (typeof virtualDevice == 'undefined') {
+					dialog.showMessageBox({
+						type: 'error',
+						title: 'ToolDuck AudioManager',
+						message: 'The virtual device (virtual microphone) is not properly configured, or is not detected. You can fix that in the settings. Make sure you have installed one.'
+					});
+				}
 
-
-			} else if (deviceInfo.label == 'Audio interne Stéréo analogique') {
-				console.log('Detected speaker audio device: ', deviceInfo);
-				speaker = deviceInfo;
-			}
-		} else if (deviceInfo.kind == 'audioinput') {
-			if (deviceInfo.label == 'Audio interne Stéréo analogique') {
-				console.log('Detected microphone: ', deviceInfo);
-
-				navigator.mediaDevices.getUserMedia({
-					audio: {
-						deviceId: {
-							exact: deviceInfo.deviceId
+				if (typeof microphoneDevice != 'undefined') {
+					navigator.mediaDevices.getUserMedia({
+						audio: {
+							deviceId: {
+								exact: microphoneDeviceId
+							}
 						}
-					},
-					video: false
-				}).then(stream => {
-					console.log('Microphone stream: ', stream)
-					window.stream = stream;
-					window.audioStreamElement = new Audio();
-					window.audioStreamElement.srcObject = stream;
-					window.audioStreamElement.setSinkId(virtual.deviceId).then(() => {
-						window.audioStreamElement.play();
+					}).then(stream => {
+						console.log('Microphone stream: ', stream);
+						window.stream = stream;
+						window.audioStreamElement = new Audio();
+						window.audioStreamElement.srcObject = stream;
+						window.audioStreamElement.setSinkId(virtualDevice.deviceId).then(() => {
+							window.audioStreamElement.play();
+
+						}).catch(e => {
+							console.error(e);
+						});
+
 					}).catch(e => {
 						console.error(e);
 					});
-				}).catch(e => {
-					console.error(e);
-				});
+				} else {
+					dialog.showMessageBox({
+						type: 'error',
+						title: 'ToolDuck AudioManager',
+						message: 'The input device (microphone) is not properly configured, or is not detected. You can fix that in the settings'
+					});
+				}
 			}
-		}
-	}
-}).catch(e => {
-	console.error(e)
-});
 
+		});
+	}).catch(e => {
+		console.error(e)
+	});
+}
+
+var runningSounds = [];
 ipcRenderer.on('soundboardPlay', (event, data) => {
 	console.log('Playing ', data.fileName);
-	if (typeof virtual == 'undefined') {
-		dialog.showMessageBox({
-			type: 'error',
-			title: 'AudioManager',
-			message: 'Aucun périphérique audio virtuel n\'est installé.'
-		});
-	}
 
 	var speakerAudioElement = new Audio();
 	console.log('speakerAudioElement: ', speakerAudioElement);
@@ -91,11 +135,11 @@ ipcRenderer.on('soundboardPlay', (event, data) => {
 		runningSounds.splice(runningSounds.indexOf(virtualAudioElement), 1);
 	});
 
-	speakerAudioElement.setSinkId(speaker.deviceId).then(() => {
+	speakerAudioElement.setSinkId(speakerDevice.deviceId).then(() => {
 		speakerAudioElement.play();
 	}).catch(handleError);
 
-	virtualAudioElement.setSinkId(virtual.deviceId).then(() => {
+	virtualAudioElement.setSinkId(virtualDevice.deviceId).then(() => {
 		virtualAudioElement.play();
 	}).catch(handleError);
 });

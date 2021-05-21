@@ -29,9 +29,29 @@
 		</div>
 
 		<div class="tab" id="audio">
-			audio
+			<label class="form-label">
+				<span>Audio input device</span>
+				<select class="form-input" id="audioInput"></select>
+			</label>
+
+			<label class="form-label">
+				<span>Audio output device</span>
+				<select class="form-input" id="audioOutput"></select>
+			</label>
+
+			<label class="form-label">
+				<span>Virtual audio cable</span>
+				<select class="form-input" id="audioCable"></select>
+			</label>
+
+			<button class="button" id="reloadAudioManagerButton">Reload audio manager</button>
 		</div>
 	</div>
+
+	<footer class="buttons">
+		<button class="button" id="saveButton">Save</button>
+		<button class="button" id="closeButton">Close</button>
+	</footer>
 </body>
 <script>
 	if (typeof module === 'object') {

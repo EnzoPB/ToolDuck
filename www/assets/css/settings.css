@@ -42,3 +42,21 @@ body {
 .tab.selected {
 	display: block;
 }
+
+.form-input {
+	width: 100%;
+}
+
+#reloadAudioManagerButton {
+	width: 100%;
+}
+
+footer.buttons {
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+}
+
+footer.buttons button:not(:last-child) {
+	margin-right: 5px;
+}

@@ -59,7 +59,7 @@ function createAudioManagerWindow() {
 		audioManagerWindow.hide(); // and then we hide it
 	});
 
-	audioManagerWindow.loadFile('audioManager.html'); // load the html document
+	audioManagerWindow.loadFile('audioManager/audioManager.html'); // load the html document
 
 	if (debug) {
 		audioManagerWindow.webContents.openDevTools();

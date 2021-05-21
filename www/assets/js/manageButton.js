@@ -20,7 +20,7 @@ var button = { // initial button data
 
 $(() => {
 	button.id = ipcRenderer.sendSync('getButton');
-	db.buttons.find({ id: button.id }, (err, _button) => { // we search the database for existing data
+	db.buttons.findOne({ id: button.id }, (err, _button) => { // we search the database for existing data
 		if (err) throw err;
 
 		if (button.id == 6) { // if the button is a potentiometer
@@ -121,7 +121,7 @@ $(() => {
 				message: `You must fill the following fields: ${emptyInput.join(', ')}` // telling which input is empty
 			});
 		} else {
-			db.buttons.find({ id: button.id }, (err, count) => { // we search the database for existing data
+			db.buttons.findOne({ id: button.id }, (err, count) => { // we search the database for existing data
 				if (err) throw err;
 
 				if (count == 0) { // if the buttons doesn't exists in the database

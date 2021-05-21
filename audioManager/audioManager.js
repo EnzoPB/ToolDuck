@@ -85,11 +85,11 @@ function init() {
 							}
 						}
 					}).then(stream => {
-						console.log('Microphone stream: ', stream);
 						microphoneStream = new Audio();
 						microphoneStream.srcObject = stream;
 						microphoneStream.setSinkId(virtualDevice.deviceId).then(() => {
 							microphoneStream.play();
+							console.log('Microphone audio: ', microphoneStream);
 
 						}).catch(e => {
 							console.error(e);

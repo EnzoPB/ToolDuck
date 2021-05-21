@@ -85,7 +85,7 @@ $('#saveButton').on('click', () => {
 	dbInsertOrUpdate({ setting: 'audioInput' }, { setting: 'audioInput', value: $('#audioInput').val() });
 
 	ipcRenderer.send('reloadAudioManager');
-	//window.close();
+	window.close();
 });
 
 $('#closeButton').on('click', () => {

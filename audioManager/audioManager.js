@@ -18,6 +18,8 @@ var speakerDevice;
 var virtualDevice;
 var microphoneDevice;
 
+var microphoneStream;
+
 db.settings.findOne({ setting: 'audioOutput' }, (err, setting) => {
 	if (err) throw err;
 	speakerDeviceId = setting.value;
@@ -84,11 +86,10 @@ function init() {
 						}
 					}).then(stream => {
 						console.log('Microphone stream: ', stream);
-						window.stream = stream;
-						window.audioStreamElement = new Audio();
-						window.audioStreamElement.srcObject = stream;
-						window.audioStreamElement.setSinkId(virtualDevice.deviceId).then(() => {
-							window.audioStreamElement.play();
+						microphoneStream = new Audio();
+						microphoneStream.srcObject = stream;
+						microphoneStream.setSinkId(virtualDevice.deviceId).then(() => {
+							microphoneStream.play();
 
 						}).catch(e => {
 							console.error(e);

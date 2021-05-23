@@ -29,8 +29,8 @@ $(() => {
 			$('#action-potentiometer').hide(); // we hide the action selector corresponding to the potentiometer
 		}
 
-		if (_button.length == 1) { // if the button already exists, we pre-fill the fields with the existing data
-			button = _button[0];
+		if (_button != null) { // if the button already exists, we pre-fill the fields with the existing data
+			button = _button;
 			$('#name').val(button.name);
 			$('#color').val(button.color);
 			$('#action-potentiometer').val(button.action);
@@ -121,7 +121,7 @@ $(() => {
 				message: `You must fill the following fields: ${emptyInput.join(', ')}` // telling which input is empty
 			});
 		} else {
-			db.buttons.findOne({ id: button.id }, (err, count) => { // we search the database for existing data
+			db.buttons.count({ id: button.id }, (err, count) => { // we search the database for existing data
 				if (err) throw err;
 
 				if (count == 0) { // if the buttons doesn't exists in the database

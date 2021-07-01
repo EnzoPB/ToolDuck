@@ -38,9 +38,9 @@ function connectSerial(port) {
 						case 'buttonHold': // if the button is pressed for a long time (1 sec)
 							buttonHold(button);
 							break;
-				}
+					}
+				});
 			});
-	});
 	});
 }
 
@@ -179,27 +179,33 @@ ipcMain.on('reloadAudioManager', event => {
 });
 
 function buttonPush(button) { // when a button is clicked
-		if (button != null) {
-			switch (button.action) { // execute the action
-				case 'keybind':
+	if (button != null) {
+		switch (button.action) { // execute the action
+			case 'keybind':
 				actions.keybind();
-					break;
-				case 'command':
+				break;
+			case 'command':
 				actions.command();
-					break;
-				case 'soundboardPlay':
+				break;
+			case 'soundboardPlay':
 				actions.soundboardPlay(audioManagerWindow, button.actionData.fileName, button.actionData.volume);
-					break;
-				case 'soundboardStop':
+				break;
+			case 'soundboardStop':
 				actions.soundboardStop(audioManagerWindow);
-					break;
-			}
+				break;
+			case 'sampler':
+				actions.samplerPush(audioManagerWindow, button);
+				break;
 		}
+	}
 }
 
 function buttonHold(button) {
 	if (button != null) {
 		switch (button.action) { // execute the action
+			case 'sampler':
+				actions.samplerHold(audioManagerWindow, button);
+				break;
 		}
 	}
 }

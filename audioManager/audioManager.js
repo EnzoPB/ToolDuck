@@ -2,6 +2,7 @@ const {
 	ipcRenderer,
 	remote
 } = require('electron');
+const sampler = require('./sampler.js');
 const { dialog } = remote;
 const path = require('path');
 const nedb = require('nedb');

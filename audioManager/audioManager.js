@@ -167,7 +167,7 @@ ipcRenderer.on('soundboardStop', () => {
 function handleError(e) {
 	dialog.showMessageBox({
 		type: 'error',
-		title: 'AudioManager - Erreur',
+		title: 'AudioManager - Error',
 		message: e.message
 	});
 	console.error(e);

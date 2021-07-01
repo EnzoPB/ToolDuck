@@ -20,7 +20,7 @@ var buttonsDataArrays = { // arrays where the audio data are stored during the r
 	5: []
 }
 
-function initSampler() { // function called when the audioManager has finished loading
+function initSampler() { // function called when the audioEngine has finished loading
 	buttonsRecorders = { // MediaRecorder element for each buttons (we don't use a single on for every button to avoid problems if 2 buttons are pressed at the same time)
 		0: new MediaRecorder(microphoneStream), // we tell the MediaRecorder to record the microphone
 		1: new MediaRecorder(microphoneStream),

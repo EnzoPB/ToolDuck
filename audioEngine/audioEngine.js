@@ -66,7 +66,7 @@ function init() {
 				if (typeof speakerDevice == 'undefined') {
 					dialog.showMessageBox({
 						type: 'error',
-						title: 'ToolDuck AudioManager',
+						title: 'ToolDuck AudioEngine',
 						message: 'The output device (speakers) is not properly configured, or is not detected. You can fix that in the settings'
 					});
 				}
@@ -74,7 +74,7 @@ function init() {
 				if (typeof virtualDevice == 'undefined') {
 					dialog.showMessageBox({
 						type: 'error',
-						title: 'ToolDuck AudioManager',
+						title: 'ToolDuck AudioEngine',
 						message: 'The virtual device (virtual microphone) is not properly configured, or is not detected. You can fix that in the settings. Make sure you have installed one.'
 					});
 				}
@@ -105,7 +105,7 @@ function init() {
 				} else {
 					dialog.showMessageBox({
 						type: 'error',
-						title: 'ToolDuck AudioManager',
+						title: 'ToolDuck AudioEngine',
 						message: 'The input device (microphone) is not properly configured, or is not detected. You can fix that in the settings'
 					});
 				}
@@ -167,7 +167,7 @@ ipcRenderer.on('soundboardStop', () => {
 function handleError(e) {
 	dialog.showMessageBox({
 		type: 'error',
-		title: 'AudioManager - Error',
+		title: 'AudioEngine - Error',
 		message: e.message
 	});
 	console.error(e);

@@ -75,8 +75,8 @@ $('#audioInput').on('change', () => {
 	audioInput = $('#audioInput').val();
 });
 
-$('#reloadAudioManagerButton').on('click', () => {
-	ipcRenderer.send('reloadAudioManager');
+$('#reloadAudioEngineButton').on('click', () => {
+	ipcRenderer.send('reloadAudioEngine');
 });
 
 $('#saveButton').on('click', () => {
@@ -84,7 +84,7 @@ $('#saveButton').on('click', () => {
 	dbInsertOrUpdate({ setting: 'audioCable' }, { setting: 'audioCable', value: $('#audioCable').val() });
 	dbInsertOrUpdate({ setting: 'audioInput' }, { setting: 'audioInput', value: $('#audioInput').val() });
 
-	ipcRenderer.send('reloadAudioManager');
+	ipcRenderer.send('reloadAudioEngine');
 	window.close();
 });
 

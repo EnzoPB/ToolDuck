@@ -52,11 +52,11 @@ var db = { // load the databases
 };
 
 var mainWindow;
-var audioManagerWindow;
+var audioEngineWindow;
 var tray;
 
-function createAudioManagerWindow() {
-	audioManagerWindow = new BrowserWindow({ // Create the audioManager window (not actually a window, more information in audioManager.html)
+function createAudioEngineWindow() {
+	audioEngineWindow = new BrowserWindow({ // Create the audioEngine window (not actually a window, more information in audioEngine.html)
 		width: 0,
 		height: 0,
 		webPreferences: {
@@ -66,14 +66,14 @@ function createAudioManagerWindow() {
 		}
 	});
 
-	audioManagerWindow.once('ready-to-show', function() { // we make this because sometimes this window doesn't hide properly, we make this so it show for a very short time (the size is 0x0 so it is almost invisible)
-		audioManagerWindow.hide(); // and then we hide it
+	audioEngineWindow.once('ready-to-show', function() { // we make this because sometimes this window doesn't hide properly, we make this so it show for a very short time (the size is 0x0 so it is almost invisible)
+		audioEngineWindow.hide(); // and then we hide it
 	});
 
-	audioManagerWindow.loadFile('audioManager/audioManager.html'); // load the html document
+	audioEngineWindow.loadFile('audioEngine/audioEngine.html'); // load the html document
 
 	if (debug) {
-		audioManagerWindow.webContents.openDevTools();
+		audioEngineWindow.webContents.openDevTools();
 	}
 }
 
@@ -120,7 +120,7 @@ app.whenReady().then(() => {
 
 	connectSerial('COM5'); // Connect the device's serial port and start the listener
 
-	createAudioManagerWindow(); // Create the audioManager window
+	createAudioEngineWindow(); // Create the audioEngine window
 	createMainWindow(); // Create the main window
 });
 
@@ -174,8 +174,8 @@ ipcMain.on('openSettingsDialog', event => {
 	});
 });
 
-ipcMain.on('reloadAudioManager', event => {
-	audioManagerWindow.reload();
+ipcMain.on('reloadAudioEngine', event => {
+	audioEngineWindow.reload();
 });
 
 function buttonPush(button) { // when a button is clicked
@@ -188,13 +188,13 @@ function buttonPush(button) { // when a button is clicked
 				actions.command();
 				break;
 			case 'soundboardPlay':
-				actions.soundboardPlay(audioManagerWindow, button.actionData.fileName, button.actionData.volume);
+				actions.soundboardPlay(audioEngineWindow, button.actionData.fileName, button.actionData.volume);
 				break;
 			case 'soundboardStop':
-				actions.soundboardStop(audioManagerWindow);
+				actions.soundboardStop(audioEngineWindow);
 				break;
 			case 'sampler':
-				actions.samplerPush(audioManagerWindow, button);
+				actions.samplerPush(audioEngineWindow, button);
 				break;
 		}
 	}
@@ -204,7 +204,7 @@ function buttonHold(button) {
 	if (button != null) {
 		switch (button.action) { // execute the action
 			case 'sampler':
-				actions.samplerHold(audioManagerWindow, button);
+				actions.samplerHold(audioEngineWindow, button);
 				break;
 		}
 	}

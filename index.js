@@ -9,6 +9,7 @@ const path = require('path');
 const nedb = require('nedb');
 const SerialPort = require('serialport');
 const { StringStream } = require('scramjet');
+const actions = require('./actions.js');
 
 var debug = true;
 if (process.argv.includes('debug')) {
@@ -26,10 +27,20 @@ function connectSerial(port) {
 			.lines('\r\n') // read data until a new line
 			.each(data => { // process the data
 				data = data.split('/'); // data format: dataType/data
-				if (data[0] == 'buttonPress') { // if the dataType is a button press
-					doAction(data[1]); // execute the action corresponding to the button
+
+				db.buttons.loadDatabase(); // update the database
+				db.buttons.findOne({ id: parseInt(data[1]) }, (err, button) => { // find the button in the database
+					if (err) throw err;
+					switch (data[0]) { // depending on the type of action
+						case 'buttonPush': // if the button is released after a short press
+							buttonPush(button);
+							break;
+						case 'buttonHold': // if the button is pressed for a long time (1 sec)
+							buttonHold(button);
+							break;
 				}
 			});
+	});
 	});
 }
 
@@ -167,29 +178,28 @@ ipcMain.on('reloadAudioManager', event => {
 	audioManagerWindow.reload();
 });
 
-function doAction(button) { // when a button is clicked
-	db.buttons.loadDatabase(); // update the database
-	db.buttons.findOne({ id: parseInt(button) }, (err, button) => { // find the button in the database
-		if (err) throw err;
-
+function buttonPush(button) { // when a button is clicked
 		if (button != null) {
 			switch (button.action) { // execute the action
 				case 'keybind':
-
+				actions.keybind();
 					break;
 				case 'command':
-
+				actions.command();
 					break;
 				case 'soundboardPlay':
-					audioManagerWindow.webContents.send('soundboardPlay', {
-						fileName: button.actionData.fileName,
-						volume: button.actionData.volume
-					});
+				actions.soundboardPlay(audioManagerWindow, button.actionData.fileName, button.actionData.volume);
 					break;
 				case 'soundboardStop':
-					audioManagerWindow.webContents.send('soundboardStop');
+				actions.soundboardStop(audioManagerWindow);
 					break;
 			}
 		}
-	});
+}
+
+function buttonHold(button) {
+	if (button != null) {
+		switch (button.action) { // execute the action
+		}
+	}
 }

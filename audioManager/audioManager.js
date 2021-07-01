@@ -19,6 +19,7 @@ var virtualDevice;
 var microphoneDevice;
 
 var microphoneStream;
+var microphoneAudioElement;
 
 db.settings.findOne({ setting: 'audioOutput' }, (err, setting) => {
 	if (err) throw err;
@@ -85,11 +86,13 @@ function init() {
 							}
 						}
 					}).then(stream => {
-						microphoneStream = new Audio();
-						microphoneStream.srcObject = stream;
-						microphoneStream.setSinkId(virtualDevice.deviceId).then(() => {
-							microphoneStream.play();
-							console.log('Microphone audio: ', microphoneStream);
+						microphoneStream = stream;
+						microphoneAudioElement = new Audio();
+						microphoneAudioElement.srcObject = stream;
+						microphoneAudioElement.setSinkId(virtualDevice.deviceId).then(() => {
+							microphoneAudioElement.play();
+							console.log('Microphone audio: ', microphoneAudioElement);
+							sampler.initSampler();
 
 						}).catch(e => {
 							console.error(e);
@@ -113,9 +116,14 @@ function init() {
 	});
 }
 
-var runningSounds = [];
 ipcRenderer.on('soundboardPlay', (event, data) => {
-	console.log('Playing ', data.fileName);
+	playSound(data.fileName, data.volume);
+});
+
+var runningSounds = [];
+
+function playSound(fileName, volume) {
+	console.log('Playing ', fileName);
 
 	var speakerAudioElement = new Audio();
 	console.log('speakerAudioElement: ', speakerAudioElement);
@@ -125,11 +133,11 @@ ipcRenderer.on('soundboardPlay', (event, data) => {
 	runningSounds.push(speakerAudioElement);
 	runningSounds.push(virtualAudioElement);
 
-	speakerAudioElement.src = data.fileName;
-	virtualAudioElement.src = data.fileName;
+	speakerAudioElement.src = fileName;
+	virtualAudioElement.src = fileName;
 
-	speakerAudioElement.volume = data.volume / 100;
-	virtualAudioElement.volume = data.volume / 100;
+	speakerAudioElement.volume = volume / 100;
+	virtualAudioElement.volume = volume / 100;
 
 	speakerAudioElement.addEventListener('ended', () => {
 		runningSounds.splice(runningSounds.indexOf(speakerAudioElement), 1);
@@ -143,7 +151,7 @@ ipcRenderer.on('soundboardPlay', (event, data) => {
 	virtualAudioElement.setSinkId(virtualDevice.deviceId).then(() => {
 		virtualAudioElement.play();
 	}).catch(handleError);
-});
+}
 
 ipcRenderer.on('soundboardStop', () => {
 	console.log('Stopping every sounds');

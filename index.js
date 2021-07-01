@@ -107,7 +107,7 @@ function createTrayMenu() {
 app.whenReady().then(() => {
 	createTrayMenu(); // create the tray menu
 
-	connectSerial('/dev/ttyACM0'); // Connect the device's serial port and start the listener
+	connectSerial('COM5'); // Connect the device's serial port and start the listener
 
 	createAudioManagerWindow(); // Create the audioManager window
 	createMainWindow(); // Create the main window

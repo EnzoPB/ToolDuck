@@ -43,6 +43,10 @@ $(() => {
 
 			settings.forEach(setting => {
 				switch (setting.setting) {
+					case 'buttonHoldTimer':
+						$('#buttonHoldTimer').val(setting.value);
+						break;
+
 					case 'audioOutput':
 						$('#audioOutput').val(setting.value);
 						break;
@@ -67,6 +71,8 @@ $('#toggleAudioEngineConsoleButton').on('click', () => {
 });
 
 $('#saveButton').on('click', () => {
+	dbInsertOrUpdate({ setting: 'buttonHoldTimer' }, { setting: 'buttonHoldTimer', value: $('#buttonHoldTimer').val() });
+
 	dbInsertOrUpdate({ setting: 'audioOutput' }, { setting: 'audioOutput', value: $('#audioOutput').val() });
 	dbInsertOrUpdate({ setting: 'audioCable' }, { setting: 'audioCable', value: $('#audioCable').val() });
 	dbInsertOrUpdate({ setting: 'audioInput' }, { setting: 'audioInput', value: $('#audioInput').val() });

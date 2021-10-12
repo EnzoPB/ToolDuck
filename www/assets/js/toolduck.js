@@ -3,7 +3,7 @@ $('.form-input[type="range"]').on('input', event => {
 	var unit = slider.data('unit');
 	var label = slider.siblings('.value');
 
-	label.text(slider.val() + ' ' + unit);
+	label.text(slider.val() + unit);
 });
 
 const popover = (text, element) => {

@@ -46,7 +46,7 @@ function connectSerial(port) {
 						case 'buttonPush': // if the button is released after a short press
 							buttonPush(button);
 							break;
-						case 'buttonHold': // if the button is pressed for a long time (1 sec)
+						case 'buttonHold': // if the button is pressed for a long time (1 sec by default)
 							buttonHold(button);
 							break;
 					}
@@ -57,6 +57,17 @@ function connectSerial(port) {
 
 function updateConfig() {
 	db.settings.loadDatabase(); // update the database
+	db.settings.findOne({ setting: 'buttonHoldTimer' }, (err, setting) => { // get the config from the settings database
+		if (err) throw err;
+		
+		if (typeof(setting.value) == 'undefined') { // if the setting isn't set in the database
+			buttonHoldTimer = 1; // set it to 1s by default
+		} else {
+			buttonHoldTimer = setting.value; // otherwise set it to the value found in the database
+		}
+
+		serialport.write('buttonHoldTimer/' + buttonHoldTimer + '\n'); // send the config to the controller
+	});
 }
 
 var mainWindow;

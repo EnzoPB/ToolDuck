@@ -3,7 +3,7 @@ const {
 	remote
 } = require('electron');
 const path = require('path');
-const nedb = require('nedb');
+const nedb = require('nedb-revived');
 
 var db = {
 	buttons: new nedb({ filename: path.join(remote.app.getPath('userData'), 'buttons.db'), autoload: true })

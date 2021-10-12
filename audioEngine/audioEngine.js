@@ -5,7 +5,7 @@ const {
 const sampler = require('./sampler.js');
 const { dialog } = remote;
 const path = require('path');
-const nedb = require('nedb');
+const nedb = require('nedb-revived');
 
 var db = {
 	settings: new nedb({ filename: path.join(remote.app.getPath('userData'), 'settings.db'), autoload: true })

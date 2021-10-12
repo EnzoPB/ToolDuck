@@ -6,7 +6,7 @@ const {
 	Menu
 } = require('electron');
 const path = require('path');
-const nedb = require('nedb');
+const nedb = require('nedb-revived');
 const SerialPort = require('serialport');
 const { StringStream } = require('scramjet');
 const actions = require('./actions.js');

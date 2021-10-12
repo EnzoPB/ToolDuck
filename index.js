@@ -55,6 +55,8 @@ function createAudioEngineWindow() {
 	audioEngineWindow = new BrowserWindow({ // Create the audioEngine window (not actually a window, more information in audioEngine.html)
 		width: 0,
 		height: 0,
+		frame: 0,
+		transparent: true,
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,
@@ -62,7 +64,7 @@ function createAudioEngineWindow() {
 		}
 	});
 
-	audioEngineWindow.once('ready-to-show', function() { // we make this because sometimes this window doesn't hide properly, we make this so it show for a very short time (the size is 0x0 so it is almost invisible)
+	audioEngineWindow.once('ready-to-show', function() { // we make this because sometimes this window doesn't hide properly, so we have to make it invisible first, and then hide it (not the same thing for electron)
 		audioEngineWindow.hide(); // and then we hide it
 	});
 

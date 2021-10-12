@@ -72,6 +72,7 @@ $('#saveButton').on('click', () => {
 	dbInsertOrUpdate({ setting: 'audioInput' }, { setting: 'audioInput', value: $('#audioInput').val() });
 
 	ipcRenderer.send('reloadAudioEngine');
+	ipcRenderer.send('updateConfig');
 	window.close();
 });
 

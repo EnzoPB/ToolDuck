@@ -11,13 +11,28 @@ const SerialPort = require('serialport');
 const { StringStream } = require('scramjet');
 const actions = require('./actions.js');
 
+var db = { // load the databases
+	buttons: new nedb({
+		filename: path.join(app.getPath('userData'), 'buttons.db'),
+		autoload: true
+	}),
+	settings: new nedb({
+		filename: path.join(app.getPath('userData'), 'settings.db'),
+		autoload: true
+	})
+};
+
+var serialport;
+
 function connectSerial(port) {
-	var serialport = new SerialPort(port, { // initialize the serial port connection
+	serialport = new SerialPort(port, { // initialize the serial port connection
 		baudRate: 9600,
 		parser: new SerialPort.parsers.Readline('\r\n')
 	});
 
 	serialport.on('open', () => { // when the serial port is opened
+		updateConfig(); // update the controller config 
+
 		serialport.pipe(new StringStream)
 			.lines('\r\n') // read data until a new line
 			.each(data => { // process the data
@@ -26,6 +41,7 @@ function connectSerial(port) {
 				db.buttons.loadDatabase(); // update the database
 				db.buttons.findOne({ id: parseInt(data[1]) }, (err, button) => { // find the button in the database
 					if (err) throw err;
+
 					switch (data[0]) { // depending on the type of action
 						case 'buttonPush': // if the button is released after a short press
 							buttonPush(button);
@@ -39,12 +55,9 @@ function connectSerial(port) {
 	});
 }
 
-var db = { // load the databases
-	buttons: new nedb({
-		filename: path.join(app.getPath('userData'), 'buttons.db'),
-		autoload: true
-	})
-};
+function updateConfig() {
+	db.settings.loadDatabase(); // update the database
+}
 
 var mainWindow;
 var audioEngineWindow;
@@ -168,8 +181,12 @@ ipcMain.on('openSettingsWindow', event => {
 	});
 });
 
-ipcMain.on('reloadAudioEngine', event => { // when the user clicks the reload audio engine button in the settings
+ipcMain.on('reloadAudioEngine', event => { // when the user clicks the reload audio engine button in the settings or when the save button in the settings are saved
 	audioEngineWindow.reload();
+});
+
+ipcMain.on('updateConfig', event => { // when the user clicks the reload audio engine button in the settings
+	updateConfig();
 });
 
 ipcMain.on('toggleAudioEngineConsole', event => { // when the user clicks the toggle audio engine console button in the settings

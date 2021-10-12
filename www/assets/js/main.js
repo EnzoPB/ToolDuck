@@ -60,24 +60,3 @@ const updateButtons = () => {
 
 	$('.popover').remove();
 }
-
-const popover = (text, element) => {
-	var tooltip = $(`<span class="popover">${text}</span>`);
-	$('body').append(tooltip);
-
-	var popperInstance = Popper.createPopper(element, tooltip[0], {
-		placement: 'top',
-		modifiers: [{
-			name: 'offset',
-			options: {
-				offset: [0, 5]
-			}
-		}]
-	});
-
-	$(element).one('mouseleave', event => {
-		tooltip.remove();
-		popperInstance.destroy();
-		popperInstance = null;
-	});
-};

@@ -143,12 +143,12 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when the 
 	});
 });
 
-ipcMain.on('openSettingsDialog', event => {
-	const settingsDialog = new BrowserWindow({ // create the window
+ipcMain.on('openSettingsWindow', event => {
+	const settingsWindow = new BrowserWindow({ // create the window
 		parent: mainWindow,
 		modal: true,
-		width: 500,
-		height: 400,
+		width: 550,
+		height: 500,
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {
@@ -157,16 +157,16 @@ ipcMain.on('openSettingsDialog', event => {
 			enableRemoteModule: true
 		}
 	});
-	settingsDialog.setMenuBarVisibility(false); // hide the menu bar
+	settingsWindow.setMenuBarVisibility(false); // hide the menu bar
 
-	settingsDialog.loadFile(path.join(__dirname, 'www', 'settings.html')); // load the html document
+	settingsWindow.loadFile(path.join(__dirname, 'www', 'settings.html')); // load the html document
 
-	settingsDialog.once('closed', () => { // when the window is closed, tell the mainWindow that the modifications have been submitted
+	settingsWindow.once('closed', () => { // when the window is closed, tell the mainWindow that the modifications have been submitted
 		event.returnValue = true;
 	});
 });
 
-ipcMain.on('reloadAudioEngine', event => {
+ipcMain.on('reloadAudioEngine', event => { // when the user clicks the reload audio engine button in the settings
 	audioEngineWindow.reload();
 });
 

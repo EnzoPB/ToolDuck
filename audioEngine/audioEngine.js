@@ -50,7 +50,7 @@ function init() {
 	navigator.mediaDevices.enumerateDevices().then(devices => {
 		console.log('mediaDevices: ', devices);
 		devices.forEach((device, index, array) => {
-			if (speakerDeviceId == device.deviceId) {
+			if (speakerDeviceId == device.deviceId && 'audiooutput' == device.kind) {
 				console.log('Detected speaker audio device: ', device);
 				speakerDevice = device;
 			}
@@ -60,7 +60,7 @@ function init() {
 				virtualDevice = device;
 			}
 
-			if (microphoneDeviceId == device.deviceId) {
+			if (microphoneDeviceId == device.deviceId && 'audioinput' == device.kind) {
 				console.log('Detected microphone: ', device);
 				microphoneDevice = device
 			}

@@ -191,6 +191,7 @@ body {
 }
 
 .popover {
+	z-index: 100;
 	animation: fade 0.2s;
 	position: absolute;
 	background-color: #131420;

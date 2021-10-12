@@ -9,10 +9,6 @@ var db = {
 	settings: new nedb({ filename: path.join(remote.app.getPath('userData'), 'settings.db'), autoload: true })
 };
 
-var audioOutput;
-var audioCable;
-var audioInput;
-
 $(() => {
 	setTimeout(() => {
 		$('.loader').hide();
@@ -48,31 +44,18 @@ $(() => {
 			settings.forEach(setting => {
 				switch (setting.setting) {
 					case 'audioOutput':
-						audioOutput = setting.value;
-						$('#audioOutput').val(audioOutput);
+						$('#audioOutput').val(setting.value);
 						break;
 					case 'audioCable':
-						audioCable = setting.value;
-						$('#audioCable').val(audioCable);
+						$('#audioCable').val(setting.value);
 						break;
 					case 'audioInput':
-						audioInput = setting.value;
-						$('#audioInput').val(audioInput);
+						$('#audioInput').val(setting.value);
 						break;
 				}
 			});
 		});
 	});
-});
-
-$('#audioOutput').on('change', () => {
-	audioOutput = $('#audioOutput').val();
-});
-$('#audioCable').on('change', () => {
-	audioCable = $('#audioCable').val();
-});
-$('#audioInput').on('change', () => {
-	audioInput = $('#audioInput').val();
 });
 
 $('#reloadAudioEngineButton').on('click', () => {

@@ -1,3 +1,6 @@
+console.log('Startup time: ', new Date(Date.now()).toLocaleString());
+const startupTime = Date.now();
+
 const {
 	ipcRenderer,
 	remote
@@ -6,6 +9,7 @@ const sampler = require('./sampler.js');
 const { dialog } = remote;
 const path = require('path');
 const nedb = require('nedb-revived');
+const { start } = require('repl');
 
 var db = {
 	settings: new nedb({ filename: path.join(remote.app.getPath('userData'), 'settings.db'), autoload: true })
@@ -93,6 +97,7 @@ function init() {
 						microphoneAudioElement.setSinkId(virtualDevice.deviceId).then(() => {
 							microphoneAudioElement.play();
 							console.log('Microphone audio: ', microphoneAudioElement);
+							console.log('Sound engine initialization finished, took ', Math.round(Date.now() - startupTime)/1000, 'sec')
 							sampler.initSampler();
 
 						}).catch(e => {

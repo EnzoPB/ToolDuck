@@ -79,6 +79,10 @@ $('#reloadAudioEngineButton').on('click', () => {
 	ipcRenderer.send('reloadAudioEngine');
 });
 
+$('#toggleAudioEngineConsoleButton').on('click', () => {
+	ipcRenderer.send('toggleAudioEngineConsole');
+});
+
 $('#saveButton').on('click', () => {
 	dbInsertOrUpdate({ setting: 'audioOutput' }, { setting: 'audioOutput', value: $('#audioOutput').val() });
 	dbInsertOrUpdate({ setting: 'audioCable' }, { setting: 'audioCable', value: $('#audioCable').val() });

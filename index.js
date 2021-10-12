@@ -11,11 +11,6 @@ const SerialPort = require('serialport');
 const { StringStream } = require('scramjet');
 const actions = require('./actions.js');
 
-var debug = true;
-if (process.argv.includes('debug')) {
-	debug = true;
-}
-
 function connectSerial(port) {
 	var serialport = new SerialPort(port, { // initialize the serial port connection
 		baudRate: 9600,
@@ -53,6 +48,7 @@ var db = { // load the databases
 
 var mainWindow;
 var audioEngineWindow;
+var audioEngineDevtoolWindow;
 var tray;
 
 function createAudioEngineWindow() {
@@ -71,10 +67,6 @@ function createAudioEngineWindow() {
 	});
 
 	audioEngineWindow.loadFile('audioEngine/audioEngine.html'); // load the html document
-
-	if (debug) {
-		audioEngineWindow.webContents.openDevTools();
-	}
 }
 
 function createMainWindow() {
@@ -176,6 +168,20 @@ ipcMain.on('openSettingsDialog', event => {
 
 ipcMain.on('reloadAudioEngine', event => {
 	audioEngineWindow.reload();
+});
+
+ipcMain.on('toggleAudioEngineConsole', event => { // when the user clicks the toggle audio engine console button in the settings
+	if (audioEngineDevtoolWindow == null) { // if the window is not opened
+		audioEngineDevtoolWindow = new BrowserWindow({ // create it, not using openDevTool directly because we want to make sure the devTool opens in a separate window
+			title: 'ToolDuck Audio Engine',
+			icon: path.join(__dirname, 'icon.png')
+		});
+		audioEngineWindow.webContents.setDevToolsWebContents(audioEngineDevtoolWindow.webContents); // set the window content to the devtool content
+		audioEngineWindow.webContents.openDevTools({mode: 'detach'}); // open the devtool in "detach" mode
+	} else { // if the window is already opened
+		audioEngineDevtoolWindow.close(); // close it
+		audioEngineDevtoolWindow = null;
+	}
 });
 
 function buttonPush(button) { // when a button is clicked

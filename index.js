@@ -66,7 +66,7 @@ function updateConfig() {
 			buttonHoldTimer = setting.value; // otherwise set it to the value found in the database
 		}
 
-		serialport.write('buttonHoldTimer/' + buttonHoldTimer + '\n'); // send the config to the controller
+		serialport.write('buttonHoldTimer/' + buttonHoldTimer*1000 + '\n'); // send the config to the controller
 	});
 }
 

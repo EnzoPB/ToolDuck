@@ -66,6 +66,10 @@ function createMainWindow() {
 	mainWindow.setMenuBarVisibility(false); // hide the menu bar
 	mainWindow.loadFile(path.join(__dirname, 'www', 'main.html')); // load the html document
 
+	mainWindow.once('ready-to-show', () => { // once the window has finished loading
+		callback();
+	});
+
 	tray.setContextMenu(Menu.buildFromTemplate([ // only keep the "quit" button from the tray menu
 		{ label: 'Quit', role: 'quit' }
 	]));

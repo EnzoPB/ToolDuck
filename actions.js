@@ -1,4 +1,6 @@
-function keybind() {}
+function log(data) {
+	console.log('[actions]', data);
+}
 
 var actions = {};
 
@@ -28,14 +30,8 @@ actions.samplerHold = (audioEngineWindow, button) => {
 module.exports = _actions = {
 	buttonPush: button => { // when a button is clicked
 		if (button != null) {
-module.exports = {
-	keybind: keybind,
-	command: command,
-	soundboardPlay: soundboardPlay,
-	soundboardStop: soundboardStop,
-	samplerPush: samplerPush,
-	samplerHold: samplerHold
-};
+			log(`button push: action ${button.action} called for button ${button.id}`);
+
 			switch (button.action) { // execute the action
 				case 'keybind':
 					actions.keybind();
@@ -58,6 +54,7 @@ module.exports = {
 	
 	buttonHold: button => {
 		if (button != null) {
+			log(`button hold: action ${button.action} called for button ${button.id}`);
 
 			switch (button.action) { // execute the action
 				case 'sampler':

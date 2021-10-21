@@ -13,6 +13,10 @@ const actions = require('./actions.js');
 controller.pushHandler = actions.buttonPush;
 controller.holdHandler = actions.buttonHold;
 
+function log(data) {
+	console.log('[main]', data);
+}
+
 var db = { // load the databases
 	buttons: new nedb({
 		filename: path.join(app.getPath('userData'), 'buttons.db'),
@@ -30,6 +34,7 @@ var audioEngineDevtoolWindow;
 var tray;
 
 function createAudioEngineWindow() {
+	log('Creating audio engine window');
 	audioEngineWindow = new BrowserWindow({ // Create the audioEngine window (not actually a window, more information in audioEngine.html)
 		width: 0,
 		height: 0,
@@ -51,6 +56,7 @@ function createAudioEngineWindow() {
 }
 
 function createMainWindow() {
+	log('Creating main window');
 	mainWindow = new BrowserWindow({ // Create the main window
 		width: 1000,
 		height: 400,
@@ -75,6 +81,7 @@ function createMainWindow() {
 	]));
 
 	mainWindow.once('close', () => {
+		log('main window closed, updating tray');
 		tray.setContextMenu(Menu.buildFromTemplate([{
 				label: 'Show',
 				click: () => { // put back the "show window" button in the tray menu, because the window is not visible anymore
@@ -88,24 +95,29 @@ function createMainWindow() {
 }
 
 function createTrayMenu() {
+	log('Creating tray menu');
 	tray = new Tray(path.join(__dirname, 'icon.png')); // create the tray object
 	tray.setToolTip('ToolDuck');
 }
 
 app.whenReady().then(() => {
+	log('App ready');
 	createTrayMenu(); // create the tray menu
 
 	createAudioEngineWindow(); // Create the audioEngine window
 	createMainWindow(() => {
+		log('main window created, connecting to serial');
 		controller.connect(); // Connect the controller's serial port and start the data listener
 	}); // Create the main window
 });
 
 app.once('quit', () => { // when the app is closing
+	log('Closing app');
 	controller.disconnect(); // close the serial (if we don't do this windows can think we are still using the serial port)
 });
 
 ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when the user clicks on a button (to modify or create one)
+	log('Creating manage button window for button ' + button.id);
 	const manageButtonWindow = new BrowserWindow({ // create the window
 		parent: mainWindow,
 		modal: true,
@@ -133,6 +145,7 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when the 
 });
 
 ipcMain.on('openSettingsWindow', event => {
+	log('Opening settings window');
 	const settingsWindow = new BrowserWindow({ // create the window
 		parent: mainWindow,
 		modal: true,
@@ -156,7 +169,23 @@ ipcMain.on('openSettingsWindow', event => {
 });
 
 ipcMain.on('reloadAudioEngine', event => { // when the user clicks the reload audio engine button in the settings or when the save button in the settings are saved
+	log('Reloading audio engine');
 	audioEngineWindow.reload();
+});
+
+ipcMain.on('toggleAudioEngineConsole', event => { // when the user clicks the toggle audio engine console button in the settings
+	log('Toggling audio engine console');
+	if (audioEngineDevtoolWindow == null) { // if the window is not opened
+		audioEngineDevtoolWindow = new BrowserWindow({ // create it, not using openDevTool directly because we want to make sure the devTool opens in a separate window
+			title: 'ToolDuck Audio Engine',
+			icon: path.join(__dirname, 'icon.png')
+		});
+		audioEngineWindow.webContents.setDevToolsWebContents(audioEngineDevtoolWindow.webContents); // set the window content to the devtool content
+		audioEngineWindow.webContents.openDevTools({mode: 'detach'}); // open the devtool in "detach" mode
+	} else { // if the window is already opened
+		audioEngineDevtoolWindow.close(); // close it
+		audioEngineDevtoolWindow = null;
+	}
 });
 
 ipcMain.on('getControllerStatus', event => { // get the current status of the serial
@@ -171,18 +200,4 @@ ipcMain.on('reconnectController', event => { // when the users clicks the reconn
 
 ipcMain.on('updateConfig', event => { // when the user clicks the reload audio engine button in the settings
 	controller.updateConfig();
-});
-
-ipcMain.on('toggleAudioEngineConsole', event => { // when the user clicks the toggle audio engine console button in the settings
-	if (audioEngineDevtoolWindow == null) { // if the window is not opened
-		audioEngineDevtoolWindow = new BrowserWindow({ // create it, not using openDevTool directly because we want to make sure the devTool opens in a separate window
-			title: 'ToolDuck Audio Engine',
-			icon: path.join(__dirname, 'icon.png')
-		});
-		audioEngineWindow.webContents.setDevToolsWebContents(audioEngineDevtoolWindow.webContents); // set the window content to the devtool content
-		audioEngineWindow.webContents.openDevTools({mode: 'detach'}); // open the devtool in "detach" mode
-	} else { // if the window is already opened
-		audioEngineDevtoolWindow.close(); // close it
-		audioEngineDevtoolWindow = null;
-	}
 });

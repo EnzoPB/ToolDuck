@@ -4,6 +4,9 @@ const nedb = require('nedb-revived');
 const SerialPort = require('serialport');
 const { StringStream } = require('scramjet');
 
+function log(data) {
+	console.log('[controller]', data);
+}
 
 var db = { // load the databases
 	buttons: new nedb({
@@ -50,6 +53,7 @@ controller.getSerialPort = callback => {
 var serialport;
 controller.connect = (callback = () => {}) => {
 	controller.getSerialPort(port => { // fetch the controller
+		log('Connecting to serial port ' + port)
 		serialport = new SerialPort(port, { // initialize the serial port connection
 			baudRate: 9600,
 			autoOpen: false,
@@ -57,6 +61,7 @@ controller.connect = (callback = () => {}) => {
 		});
 	
 		serialport.open(() => { // when the serial port is opened
+			log('Serial connected');
 			callback();
 			controller.updateConfig(); // update the controller config 
 			controller.handleData(); // create the data handler
@@ -69,6 +74,7 @@ controller.connect = (callback = () => {}) => {
 }
 
 controller.disconnect = (callback = () => {}) => {
+	log('Disconnecting serial...');
 	if (typeof serialport == 'undefined') {
 		callback();
 	} else {
@@ -77,6 +83,7 @@ controller.disconnect = (callback = () => {}) => {
 }
 
 controller.reconnect = () => {
+	log('Reconnecting serial...');
 	controller.disconnect(() => {
 		controller.connect();
 	});
@@ -103,6 +110,7 @@ controller.handleData = () => {
 }
 
 controller.updateConfig = () => {
+	log('Updating config');
 
 	db.settings.loadDatabase(); // update the database
 	db.settings.findOne({ setting: 'buttonHoldTimer' }, (err, setting) => { // get the config from the settings database
@@ -113,6 +121,7 @@ controller.updateConfig = () => {
 		} else {
 			buttonHoldTimer = setting.value; // otherwise set it to the value found in the database
 		}
+		log('config: buttonHoldTimer: ' + buttonHoldTimer)
 
 		serialport.write('buttonHoldTimer/' + buttonHoldTimer*1000 + '\n'); // send the config to the controller
 	});

@@ -1,15 +1,23 @@
 {
 	"name": "toolduck",
 	"displayName": "ToolDuck",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "An open-source configurable physical toolbar",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/EnzoPB/ToolDuck.git"
+	},
+	"bugs": {
+		"url": "https://github.com/EnzoPB/ToolDuck/issues",
+		"email": "enzo.puiroux@mail.com"
+	},
 	"main": "index.js",
 	"scripts": {
 		"start": "electron .",
 		"package": "electron-packager . ToolDuck--out=dist --overwrite --asar=true --icon=icon.ico",
 		"makeInstaller": "node ./scripts/build.js"
 	},
-	"author": "Enzo PB, enzo@zaptoinc.com",
+	"author": "Enzo PB, enzo.puiroux@mail.com",
 	"license": "MIT",
 	"devDependencies": {
 		"electron": "^11.5.0",

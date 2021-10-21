@@ -55,7 +55,7 @@ function createAudioEngineWindow() {
 	audioEngineWindow.loadFile('audioEngine/audioEngine.html'); // load the html document
 }
 
-function createMainWindow() {
+function createMainWindow(callback) {
 	log('Creating main window');
 	mainWindow = new BrowserWindow({ // Create the main window
 		width: 1000,

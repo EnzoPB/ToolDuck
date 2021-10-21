@@ -13,9 +13,7 @@
 	},
 	"main": "index.js",
 	"scripts": {
-		"start": "electron .",
-		"package": "electron-packager . ToolDuck--out=dist --overwrite --asar=true --icon=icon.ico",
-		"makeInstaller": "node ./scripts/build.js"
+		"start": "electron ."
 	},
 	"author": "Enzo PB, enzo.puiroux@mail.com",
 	"license": "MIT",

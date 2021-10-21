@@ -7,9 +7,11 @@ const {
 } = require('electron');
 const path = require('path');
 const nedb = require('nedb-revived');
-const SerialPort = require('serialport');
-const { StringStream } = require('scramjet');
+const controller = require('./controller.js');
 const actions = require('./actions.js');
+
+controller.pushHandler = actions.buttonPush;
+controller.holdHandler = actions.buttonHold;
 
 var db = { // load the databases
 	buttons: new nedb({
@@ -21,54 +23,6 @@ var db = { // load the databases
 		autoload: true
 	})
 };
-
-var serialport;
-
-function connectSerial(port) {
-	serialport = new SerialPort(port, { // initialize the serial port connection
-		baudRate: 9600,
-		parser: new SerialPort.parsers.Readline('\r\n')
-	});
-
-	serialport.on('open', () => { // when the serial port is opened
-		updateConfig(); // update the controller config 
-
-		serialport.pipe(new StringStream)
-			.lines('\r\n') // read data until a new line
-			.each(data => { // process the data
-				data = data.split('/'); // data format: dataType/data
-
-				db.buttons.loadDatabase(); // update the database
-				db.buttons.findOne({ id: parseInt(data[1]) }, (err, button) => { // find the button in the database
-					if (err) throw err;
-
-					switch (data[0]) { // depending on the type of action
-						case 'buttonPush': // if the button is released after a short press
-							buttonPush(button);
-							break;
-						case 'buttonHold': // if the button is pressed for a long time (1 sec by default)
-							buttonHold(button);
-							break;
-					}
-				});
-			});
-	});
-}
-
-function updateConfig() {
-	db.settings.loadDatabase(); // update the database
-	db.settings.findOne({ setting: 'buttonHoldTimer' }, (err, setting) => { // get the config from the settings database
-		if (err) throw err;
-		
-		if (typeof(setting.value) == 'undefined') { // if the setting isn't set in the database
-			buttonHoldTimer = 1; // set it to 1s by default
-		} else {
-			buttonHoldTimer = setting.value; // otherwise set it to the value found in the database
-		}
-
-		serialport.write('buttonHoldTimer/' + buttonHoldTimer*1000 + '\n'); // send the config to the controller
-	});
-}
 
 var mainWindow;
 var audioEngineWindow;
@@ -90,6 +44,7 @@ function createAudioEngineWindow() {
 
 	audioEngineWindow.once('ready-to-show', function() { // we make this because sometimes this window doesn't hide properly, so we have to make it invisible first, and then hide it (not the same thing for electron)
 		audioEngineWindow.hide(); // and then we hide it
+		actions.audioEngineWindow = audioEngineWindow; // we send it to the actions module (used to trigger the soundboard)
 	});
 
 	audioEngineWindow.loadFile('audioEngine/audioEngine.html'); // load the html document
@@ -136,10 +91,14 @@ function createTrayMenu() {
 app.whenReady().then(() => {
 	createTrayMenu(); // create the tray menu
 
-	connectSerial('COM5'); // Connect the device's serial port and start the listener
-
 	createAudioEngineWindow(); // Create the audioEngine window
-	createMainWindow(); // Create the main window
+	createMainWindow(() => {
+		controller.connect(); // Connect the controller's serial port and start the data listener
+	}); // Create the main window
+});
+
+app.once('quit', () => { // when the app is closing
+	controller.disconnect(); // close the serial (if we don't do this windows can think we are still using the serial port)
 });
 
 ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when the user clicks on a button (to modify or create one)
@@ -196,8 +155,18 @@ ipcMain.on('reloadAudioEngine', event => { // when the user clicks the reload au
 	audioEngineWindow.reload();
 });
 
+ipcMain.on('getControllerStatus', event => { // get the current status of the serial
+	event.returnValue = controller.getStatus(status => {
+		event.returnValue = status;
+	});
+});
+
+ipcMain.on('reconnectController', event => { // when the users clicks the reconnect button (only when the controller is not connected)
+	controller.reconnect();
+});
+
 ipcMain.on('updateConfig', event => { // when the user clicks the reload audio engine button in the settings
-	updateConfig();
+	controller.updateConfig();
 });
 
 ipcMain.on('toggleAudioEngineConsole', event => { // when the user clicks the toggle audio engine console button in the settings
@@ -213,35 +182,3 @@ ipcMain.on('toggleAudioEngineConsole', event => { // when the user clicks the to
 		audioEngineDevtoolWindow = null;
 	}
 });
-
-function buttonPush(button) { // when a button is clicked
-	if (button != null) {
-		switch (button.action) { // execute the action
-			case 'keybind':
-				actions.keybind();
-				break;
-			case 'command':
-				actions.command();
-				break;
-			case 'soundboardPlay':
-				actions.soundboardPlay(audioEngineWindow, button.actionData.fileName, button.actionData.volume);
-				break;
-			case 'soundboardStop':
-				actions.soundboardStop(audioEngineWindow);
-				break;
-			case 'sampler':
-				actions.samplerPush(audioEngineWindow, button);
-				break;
-		}
-	}
-}
-
-function buttonHold(button) {
-	if (button != null) {
-		switch (button.action) { // execute the action
-			case 'sampler':
-				actions.samplerHold(audioEngineWindow, button);
-				break;
-		}
-	}
-}

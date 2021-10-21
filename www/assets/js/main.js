@@ -60,3 +60,41 @@ const updateButtons = () => {
 
 	$('.popover').remove();
 }
+
+function setControllerStatus(status) {
+	var statusEl = $('#controllerStatus #status');
+	statusEl.removeClass();
+	$('#reconnect').hide();
+	switch (status) {
+		case 'connected':
+			statusEl.text('Connected');
+			statusEl.addClass('green');
+			break;
+	
+		case 'disconnected':
+			statusEl.text('Disconnected');
+			statusEl.addClass('red');
+			$('#reconnect').show();
+			break;
+
+		case 'reconnecting':
+			statusEl.text('Reconnecting...');
+			statusEl.addClass('orange');
+			break;
+	}
+}
+
+const updateControllerStatus = () => {
+	if (ipcRenderer.sendSync('getControllerStatus')) {
+		setControllerStatus('connected');
+	} else {
+		setControllerStatus('disconnected');
+	}
+}
+
+$('#reconnect').on('click', () => {
+	ipcRenderer.send('reconnectController');
+	setControllerStatus('reconnecting');
+});
+
+setInterval(updateControllerStatus, 5*1000);

@@ -1,13 +1,29 @@
-#version {
-	float: right;
-	color: #c6c8d8;
-	margin: 5px;
+header {
+	display: flex;
+	flex-shrink: 0;
+	flex-grow: 0;
+}
+header > div {
+	width: 100%;
+}
+
+#controllerStatus {
+	text-align: right;
+}
+
+#controllerStatus #status.red {
+	color: #e74c3c;
+}
+#controllerStatus #status.orange {
+	color: #f39c12;
+}
+#controllerStatus #status.green {
+	color: #2ecc71;
 }
 
 .row {
 	display: flex;
 }
-
 .toolbar {
 	position: absolute;
 	top: 50%;

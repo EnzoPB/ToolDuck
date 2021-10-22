@@ -123,6 +123,7 @@ ipcMain.on('openManageButtonDialog', (event, button) => { // trigerred when the 
 		modal: true,
 		width: 330,
 		height: 450,
+		icon: path.join(__dirname, 'icon.png'),
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {
@@ -151,6 +152,7 @@ ipcMain.on('openSettingsWindow', event => {
 		modal: true,
 		width: 550,
 		height: 500,
+		icon: path.join(__dirname, 'icon.png'),
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {

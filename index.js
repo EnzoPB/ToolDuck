@@ -175,7 +175,7 @@ ipcMain.on('reloadAudioEngine', event => { // when the user clicks the reload au
 
 ipcMain.on('toggleAudioEngineConsole', event => { // when the user clicks the toggle audio engine console button in the settings
 	log('Toggling audio engine console');
-	if (audioEngineDevtoolWindow == null) { // if the window is not opened
+	if (audioEngineDevtoolWindow == null || audioEngineDevtoolWindow.isDestroyed()) { // if the window is not opened
 		audioEngineDevtoolWindow = new BrowserWindow({ // create it, not using openDevTool directly because we want to make sure the devTool opens in a separate window
 			title: 'ToolDuck Audio Engine',
 			icon: path.join(__dirname, 'icon.png')

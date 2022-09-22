@@ -1,7 +1,7 @@
 const app = require('electron').app;
 const path = require('path');
 const nedb = require('nedb-revived');
-const SerialPort = require('serialport');
+const { SerialPort } = require('serialport')
 const { StringStream } = require('scramjet');
 
 function log(data) {

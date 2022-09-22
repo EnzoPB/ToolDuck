@@ -60,7 +60,7 @@ function createMainWindow(callback) {
 	mainWindow = new BrowserWindow({ // Create the main window
 		width: 1000,
 		height: 400,
-		icon: path.join(__dirname, 'icon.png'),
+		icon: path.join(__dirname, '..', 'icon.png'),
 		backgroundColor: '#1C1E2C',
 		resizable: false,
 		webPreferences: {
@@ -70,7 +70,12 @@ function createMainWindow(callback) {
 		}
 	});
 	mainWindow.setMenuBarVisibility(false); // hide the menu bar
-	mainWindow.loadFile(path.join(__dirname, 'www', 'main.html')); // load the html document
+	if (app.isPackaged) { // environment is prod
+		mainWindow.loadFile(path.join(__dirname, '..', 'public', 'index.html')); // load the html document
+	} else { // environment is dev
+		mainWindow.loadURL('http://localhost:3000'); // load the dev server
+		mainWindow.webContents.openDevTools(); // open dev tool
+	}
 
 	mainWindow.once('ready-to-show', () => { // once the window has finished loading
 		callback();
@@ -96,7 +101,7 @@ function createMainWindow(callback) {
 
 function createTrayMenu() {
 	log('Creating tray menu');
-	tray = new Tray(path.join(__dirname, 'icon.png')); // create the tray object
+	tray = new Tray(path.join(__dirname, '../icon.png')); // create the tray object
 	tray.setToolTip('ToolDuck');
 }
 

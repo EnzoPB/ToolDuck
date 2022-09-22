@@ -1,32 +1,55 @@
 {
-	"name": "toolduck",
-	"displayName": "ToolDuck",
-	"version": "0.3.0",
-	"description": "An open-source configurable physical toolbar",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/EnzoPB/ToolDuck.git"
-	},
-	"bugs": {
-		"url": "https://github.com/EnzoPB/ToolDuck/issues",
-		"email": "enzo.puiroux@mail.com"
-	},
-	"main": "index.js",
-	"scripts": {
-		"start": "electron ."
-	},
-	"author": "Enzo PB, enzo.puiroux@mail.com",
-	"license": "MIT",
-	"devDependencies": {
-		"electron": "^11.5.0",
-		"electron-packager": "^15.4.0",
-		"electron-rebuild": "^3.2.3",
-		"electron-winstaller": "^4.0.1",
-		"electron-wix-msi": "^3.0.6"
-	},
-	"dependencies": {
-		"nedb-revived": "^1.8.3-0",
-		"scramjet": "^4.36.0",
-		"serialport": "^9.2.4"
-	}
+  "name": "toolduck",
+  "displayName": "ToolDuck",
+  "version": "0.3.0",
+  "description": "An open-source configurable physical toolbar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EnzoPB/ToolDuck.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EnzoPB/ToolDuck/issues",
+    "email": "enzo.puiroux@mail.com"
+  },
+  "main": "main/index.js",
+  "scripts": {
+    "start": "concurrently -k \"npm:react\" \"npm:electron\"",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "react": "set BROWSER=none && react-scripts start",
+    "electron": "wait-on tcp:3000 && electron ."
+  },
+  "author": "Enzo PB, enzo.puiroux@mail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^20.2.0",
+    "electron-packager": "^16.0.0",
+    "electron-rebuild": "^3.2.9",
+    "electron-winstaller": "^5.0.0",
+    "electron-wix-msi": "^4.0.0"
+  },
+  "dependencies": {
+    "concurrently": "^7.4.0",
+    "nedb-revived": "^1.8.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "scramjet": "^4.36.8",
+    "serialport": "^10.4.0",
+    "wait-on": "^6.0.1",
+    "web-vitals": "^3.0.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }

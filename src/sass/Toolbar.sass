@@ -1,0 +1,33 @@
+@import 'colors'
+
+.row
+	display: flex
+
+.toolbarWrapper
+	position: absolute
+	left: 50%
+	top: 50%
+	width: max-content
+	transform: translate(-50%, -50%)
+	border: 1px solid $primary-light
+	border-radius: 20px
+	padding: 7px
+	
+	.toolbar
+		display: flex
+		button
+			flex-shrink: 0
+			width: 100px
+			height: 100px
+			border-radius: 10px
+			margin: 15px
+			padding: 0
+			font-size: 40px
+			color: #9d9fb3
+			&.hasContent
+				font-size: 20px
+				text-align: center
+				line-break: anywhere
+				color: $text
+			&.type-potentiometer
+				border-radius: 50%

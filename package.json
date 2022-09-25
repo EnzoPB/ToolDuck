@@ -27,9 +27,13 @@
     "electron-packager": "^16.0.0",
     "electron-rebuild": "^3.2.9",
     "electron-winstaller": "^5.0.0",
-    "electron-wix-msi": "^4.0.0"
+    "electron-wix-msi": "^4.0.0",
+    "sass": "^1.55.0"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "concurrently": "^7.4.0",
     "nedb-revived": "^1.8.3",
     "react": "^18.2.0",

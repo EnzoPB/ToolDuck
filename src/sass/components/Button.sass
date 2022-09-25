@@ -1,0 +1,35 @@
+@import '../colors'
+
+.button
+	font-size: 16px
+	transition: all 0.2s
+	cursor: pointer
+	padding: 9px 22px
+	border-radius: 25px
+	background-color: $primary
+	color: $text
+	border: 1px solid $primary-light
+	outline: none
+	&:hover
+		background-color: $primary-light
+		color: $text-light
+	&:active
+		background-color: $primary
+
+	&.red
+		background-color: $red
+		border-color: $red-light
+		&:hover
+			background-color: $red
+		&:active
+			background-color: $red-light
+
+	&.link
+		cursor: pointer
+		background-color: transparent
+		color: $text
+		font-size: inherit
+		border: none
+		outline: none
+		text-decoration: underline
+		padding: 0
